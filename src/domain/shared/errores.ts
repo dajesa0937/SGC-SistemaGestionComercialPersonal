@@ -45,3 +45,13 @@ export class ImporteInvalidoError extends ErrorDeDominio {
     super(`"${String(valor)}" no es un importe válido en pesos.`)
   }
 }
+
+export class FormatoNoSoportadoError extends ErrorDeDominio {
+  readonly codigo = 'FORMATO_NO_SOPORTADO'
+
+  constructor(extension: string) {
+    super(
+      `No se pueden leer archivos ${extension}. Ábrelo en Excel y usa «Guardar como → Libro de Excel (.xlsx)».`,
+    )
+  }
+}

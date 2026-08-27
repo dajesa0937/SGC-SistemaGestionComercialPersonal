@@ -58,18 +58,28 @@ export function formatearFecha(fechaISO: string): string {
 }
 
 /**
- * Normaliza un texto para conciliar clientes entre el archivo y la base.
- *
- * Quita tildes, pasa a mayusculas, colapsa espacios y elimina los sufijos
- * societarios mas comunes, que son la causa habitual de que un mismo cliente
- * aparezca escrito de dos formas distintas.
+ * Quita tildes, pasa a mayusculas, sustituye la puntuacion por espacios y los
+ * colapsa. Base comun para comparar encabezados de columna y para buscar.
  */
-export function normalizarParaConciliar(texto: string): string {
+export function normalizarTexto(texto: string): string {
   return texto
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toUpperCase()
-    .replace(/[.,;:()"']/g, ' ')
+    .replace(/[.,;:()"'_-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * Normaliza un nombre para conciliar clientes entre el archivo y la base.
+ *
+ * Ademas de lo anterior elimina los sufijos societarios mas comunes, que son
+ * la causa habitual de que un mismo cliente aparezca escrito de dos formas
+ * distintas en el archivo que envia la empresa.
+ */
+export function normalizarParaConciliar(texto: string): string {
+  return normalizarTexto(texto)
     .replace(/\b(S\s?A\s?S|SAS|LTDA|S\s?A|E\s?U|SCA|CIA|Y\s?CIA)\b/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()

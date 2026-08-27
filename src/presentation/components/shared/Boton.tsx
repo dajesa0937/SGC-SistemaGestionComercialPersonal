@@ -24,12 +24,17 @@ const TAMANOS: Record<Tamano, string> = {
 export function Boton({
   variante = 'secundario',
   tamano = 'md',
+  // Por defecto NO envia formularios: en HTML un <button> sin type dentro de un
+  // <form> hace submit, que es la causa clasica de formularios que se envian al
+  // pulsar "Cancelar".
+  type = 'button',
   className,
   children,
   ...resto
 }: Props) {
   return (
     <button
+      type={type}
       className={cn(
         'inline-flex items-center justify-center rounded-md font-medium',
         'transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50',

@@ -19,3 +19,4 @@ export type { ImportacionRepository } from './importacion/importacion.repository
 export * from './config/configuracion.entity'
 export type { ConfiguracionRepository } from './config/configuracion.repository'
 export type { Repositorios } from './repositorios'
+export type { ArchivoTabular, LectorTabular } from './archivos/lector-tabular'

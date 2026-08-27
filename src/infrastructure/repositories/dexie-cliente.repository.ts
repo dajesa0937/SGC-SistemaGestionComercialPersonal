@@ -77,7 +77,14 @@ export class DexieClienteRepository implements ClienteRepository {
   }
 
   async crearAlias(clienteId: Id, textoNormalizado: string): Promise<AliasCliente> {
-    const alias: AliasCliente = { id: nuevoId(), clienteId, textoOriginal: textoNormalizado }
+    // `textoOriginal` tiene indice unico: crear uno nuevo con el mismo texto
+    // reventaria la restriccion. Si ya existe, se reapunta al cliente indicado.
+    const existente = await this.buscarPorAlias(textoNormalizado)
+    const alias: AliasCliente = {
+      id: existente?.id ?? nuevoId(),
+      clienteId,
+      textoOriginal: textoNormalizado,
+    }
     await this.db.aliases.put(alias)
     return alias
   }

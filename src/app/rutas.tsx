@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { LayoutPrincipal } from './layouts/LayoutPrincipal'
 import { LimiteDeError } from './LimiteDeError'
 
@@ -18,9 +18,16 @@ const PaginaConfiguracion = lazy(
 )
 const PaginaNoEncontrada = lazy(() => import('./PaginaNoEncontrada'))
 
-/** Cada ruta va envuelta en su propio limite de error. */
+/**
+ * Cada ruta va envuelta en su propio limite de error.
+ *
+ * La `key` con la ruta actual es deliberada: sin ella, una pantalla que fallo
+ * seguiria mostrando el error al volver a entrar, porque el limite conserva su
+ * estado. Cambiar la clave lo remonta limpio en cada navegacion.
+ */
 function Ruta({ children }: { children: React.ReactNode }) {
-  return <LimiteDeError>{children}</LimiteDeError>
+  const { pathname } = useLocation()
+  return <LimiteDeError key={pathname}>{children}</LimiteDeError>
 }
 
 export function Rutas() {
