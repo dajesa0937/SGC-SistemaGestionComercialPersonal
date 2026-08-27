@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Sistema de Gestión Comercial Personal" />
+    <meta name="theme-color" content="#0e6a62" />
+    <title>SGC Personal</title>
+    <script>
+      // Aplica el tema antes del primer pintado para evitar el destello de tema claro.
+      ;(function () {
+        try {
+          var t = localStorage.getItem('sgc.tema') || 'sistema'
+          var oscuro =
+            t === 'oscuro' ||
+            (t === 'sistema' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.classList.toggle('dark', oscuro)
+        } catch (e) {
+          /* almacenamiento no disponible: se queda en claro */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

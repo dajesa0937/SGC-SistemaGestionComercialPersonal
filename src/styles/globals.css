@@ -1,0 +1,127 @@
+@import 'tailwindcss';
+@import './print.css';
+
+/* El tema oscuro se activa con la clase `dark` en <html>, no por consulta de
+   medios, porque el usuario puede forzar claro u oscuro desde la aplicacion. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Tokens de color.
+
+   Se declaran como variables CSS en :root y .dark, y se exponen a Tailwind con
+   `@theme inline` para que las utilidades (bg-superficie, text-tenue, ...) se
+   resuelvan en tiempo de ejecucion y cambien con el tema sin recompilar.
+
+   El semaforo esta reservado exclusivamente al estado de cumplimiento. Ningun
+   otro elemento de la interfaz usa verde, ambar ni rojo.
+--------------------------------------------------------------------------- */
+
+:root {
+  --sgc-fondo: #f5f7f8;
+  --sgc-superficie: #ffffff;
+  --sgc-superficie-alt: #edf1f2;
+  --sgc-borde: #dfe5e8;
+  --sgc-borde-suave: #ecf0f2;
+  --sgc-texto: #121a20;
+  --sgc-texto-suave: #5b6874;
+  --sgc-texto-tenue: #8c97a1;
+  --sgc-acento: #0e6a62;
+  --sgc-acento-fuerte: #0a4f49;
+  --sgc-acento-suave: #e1efec;
+  --sgc-acento-contraste: #ffffff;
+  --sgc-exito: #2f7d4f;
+  --sgc-alerta: #9a6b18;
+  --sgc-peligro: #a53535;
+  --sgc-exito-suave: #e6f2ea;
+  --sgc-alerta-suave: #f7efe0;
+  --sgc-peligro-suave: #f7e8e8;
+}
+
+.dark {
+  --sgc-fondo: #0e1418;
+  --sgc-superficie: #151d22;
+  --sgc-superficie-alt: #1b242a;
+  --sgc-borde: #263138;
+  --sgc-borde-suave: #1d262c;
+  --sgc-texto: #e4eaee;
+  --sgc-texto-suave: #95a2ac;
+  --sgc-texto-tenue: #6c7a85;
+  --sgc-acento: #52b5a8;
+  --sgc-acento-fuerte: #7fcec3;
+  --sgc-acento-suave: #13312e;
+  --sgc-acento-contraste: #0b1416;
+  --sgc-exito: #5cb47f;
+  --sgc-alerta: #d3a256;
+  --sgc-peligro: #e08585;
+  --sgc-exito-suave: #16281e;
+  --sgc-alerta-suave: #2a2116;
+  --sgc-peligro-suave: #2d1a1a;
+}
+
+@theme inline {
+  --color-fondo: var(--sgc-fondo);
+  --color-superficie: var(--sgc-superficie);
+  --color-superficie-alt: var(--sgc-superficie-alt);
+  --color-borde: var(--sgc-borde);
+  --color-borde-suave: var(--sgc-borde-suave);
+  --color-texto: var(--sgc-texto);
+  --color-suave: var(--sgc-texto-suave);
+  --color-tenue: var(--sgc-texto-tenue);
+  --color-acento: var(--sgc-acento);
+  --color-acento-fuerte: var(--sgc-acento-fuerte);
+  --color-acento-suave: var(--sgc-acento-suave);
+  --color-acento-contraste: var(--sgc-acento-contraste);
+  --color-exito: var(--sgc-exito);
+  --color-alerta: var(--sgc-alerta);
+  --color-peligro: var(--sgc-peligro);
+  --color-exito-suave: var(--sgc-exito-suave);
+  --color-alerta-suave: var(--sgc-alerta-suave);
+  --color-peligro-suave: var(--sgc-peligro-suave);
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-panel: 0.5rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--sgc-borde);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--sgc-fondo);
+    color: var(--sgc-texto);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Toda cifra monetaria o porcentual usa cifras tabulares: las columnas de
+     numeros tienen que alinearse verticalmente. Es el detalle que separa una
+     herramienta profesional de una amateur. */
+  .cifra {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--sgc-acento);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,76 @@
+/* ---------------------------------------------------------------------------
+   Hoja de impresion (RF-E04).
+
+   El PDF se genera con el dialogo del navegador ("Guardar como PDF"), no con
+   una libreria: da tipografia vectorial, texto seleccionable, cero dependencias
+   y una sola maquetacion que sirve para papel y para pantalla.
+--------------------------------------------------------------------------- */
+
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 1.5cm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 10pt;
+  }
+
+  /* La navegacion y los controles no existen en papel. */
+  .no-imprimir,
+  nav,
+  aside,
+  button,
+  [role='dialog'],
+  [data-panel-lateral] {
+    display: none !important;
+  }
+
+  .solo-impresion {
+    display: block !important;
+  }
+
+  .salto-antes {
+    break-before: page;
+  }
+
+  .salto-despues {
+    break-after: page;
+  }
+
+  .no-cortar {
+    break-inside: avoid;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* El encabezado de la tabla se repite en cada pagina. */
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid #ccc;
+    padding: 4pt 6pt;
+  }
+
+  /* Las URL no aportan nada en papel. */
+  a[href]::after {
+    content: none !important;
+  }
+}
+
+.solo-impresion {
+  display: none;
+}
