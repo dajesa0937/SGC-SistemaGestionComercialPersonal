@@ -2,7 +2,8 @@
 
 Sistema de Gestión Comercial Personal · Ejecutivo Comercial, Equipos Supra S.A.S.
 
-> **Estado del proyecto:** diseño completado, pendiente de aprobación. Ninguna línea de código escrita.
+> **Estado del proyecto:** Sprint 0 (Fundación) terminado el 26 de agosto de 2026. El andamiaje
+> arquitectónico está construido y verificado; los módulos de negocio llegan en los sprints 1 a 6.
 
 ## Documentos
 
@@ -40,3 +41,15 @@ es la que permitirá migrar a SQLite y luego a PostgreSQL sin reescribir la apli
 ## Registro de decisiones de arquitectura
 
 Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
+
+## Registro de avance
+
+| Sprint | Estado | Entregable |
+|---|---|---|
+| 0 · Fundación | **Terminado** (26-ago-2026) | Aplicación instalable, navegable, con tema claro/oscuro y funcionamiento sin conexión |
+| 1 · Maestro de clientes | Siguiente | Cartera completa cargada y consultable |
+| 2 · Importación de ventas | Pendiente | El Excel del mes entra completo y correcto |
+| 3 · Presupuesto e indicadores | Pendiente | **Primer valor real:** la situación comercial en menos de 5 segundos |
+| 4 · Ficha del cliente | Pendiente | Preparar una visita con toda la información en pantalla |
+| 5 · Reportes imprimibles | Pendiente | El informe del mes, impreso y presentable |
+| 6 · Confianza y pulido | Pendiente | MVP terminado |
