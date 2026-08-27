@@ -2,8 +2,8 @@
 
 Sistema de Gestión Comercial Personal · Ejecutivo Comercial, Equipos Supra S.A.S.
 
-> **Estado del proyecto:** Sprint 0 (Fundación) terminado el 26 de agosto de 2026. El andamiaje
-> arquitectónico está construido y verificado; los módulos de negocio llegan en los sprints 1 a 6.
+> **Estado del proyecto:** Sprints 0 y 1 terminados el 26 de agosto de 2026. La cartera de clientes
+> ya vive en la aplicación. El siguiente sprint necesita un archivo de ventas real (decisión D-03).
 
 ## Documentos
 
@@ -47,8 +47,8 @@ Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
 | Sprint | Estado | Entregable |
 |---|---|---|
 | 0 · Fundación | **Terminado** (26-ago-2026) | Aplicación instalable, navegable, con tema claro/oscuro y funcionamiento sin conexión |
-| 1 · Maestro de clientes | Siguiente | Cartera completa cargada y consultable |
-| 2 · Importación de ventas | Pendiente | El Excel del mes entra completo y correcto |
+| 1 · Maestro de clientes | **Terminado** (26-ago-2026) | Cartera completa cargada, consultable e importable desde Excel |
+| 2 · Importación de ventas | Siguiente · **bloqueado por D-03** | El Excel del mes entra completo y correcto |
 | 3 · Presupuesto e indicadores | Pendiente | **Primer valor real:** la situación comercial en menos de 5 segundos |
 | 4 · Ficha del cliente | Pendiente | Preparar una visita con toda la información en pantalla |
 | 5 · Reportes imprimibles | Pendiente | El informe del mes, impreso y presentable |
