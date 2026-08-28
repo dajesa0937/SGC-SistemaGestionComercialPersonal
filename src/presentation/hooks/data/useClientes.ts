@@ -1,48 +1,63 @@
 import { useMemo } from 'react'
-import type { Cliente } from '@/domain/cliente/cliente.entity'
+import type { ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
 import {
   filtrarClientes,
   zonasDisponibles,
   type FiltrosClientes,
 } from '@/application/clientes/filtrarClientes'
+import { useResumen } from './useResumen'
 import { useRepositorios } from './contexto-repositorios'
 import { useConsulta } from './useConsulta'
 
 export interface EstadoClientes {
-  /** `undefined` mientras la primera consulta esta en curso. */
-  readonly todos: readonly Cliente[] | undefined
-  readonly visibles: readonly Cliente[]
+  readonly visibles: readonly ClienteEnriquecido[]
   readonly zonas: readonly string[]
   readonly cargando: boolean
   readonly totalSinFiltrar: number
+  readonly sinVentas: boolean
 }
 
+/**
+ * Cartera con sus indicadores ya calculados.
+ *
+ * Reutiliza el mismo resumen que alimenta el panel, de modo que la
+ * clasificacion y el estado que ve el usuario en la tabla son exactamente los
+ * que ve en el panel. Calcularlos dos veces seria la forma mas segura de que
+ * un dia dejaran de coincidir.
+ */
 export function useClientes(filtros: FiltrosClientes): EstadoClientes {
-  const repositorios = useRepositorios()
+  const resumen = useResumen()
 
-  // Con menos de cien clientes se traen todos y se filtra en memoria: es
-  // instantaneo y evita reconsultar la base en cada pulsacion de tecla.
-  const todos = useConsulta(
-    () => repositorios.clientes.listar({ incluirArchivados: true }),
-    [repositorios],
+  const visibles = useMemo(
+    () => (resumen ? filtrarClientes(resumen.clientes, filtros) : []),
+    [resumen, filtros],
   )
-
-  const visibles = useMemo(() => (todos ? filtrarClientes(todos, filtros) : []), [todos, filtros])
-  const zonas = useMemo(() => (todos ? zonasDisponibles(todos) : []), [todos])
+  const zonas = useMemo(() => (resumen ? zonasDisponibles(resumen.clientes) : []), [resumen])
 
   return {
-    todos,
     visibles,
     zonas,
-    cargando: todos === undefined,
-    totalSinFiltrar: todos?.filter((c) => !c.archivado).length ?? 0,
+    cargando: resumen === undefined,
+    totalSinFiltrar: resumen?.clientes.filter((c) => !c.archivado).length ?? 0,
+    sinVentas: resumen?.sinDatos ?? false,
   }
 }
 
-export function useCliente(id: string | null) {
+/** Notas de un cliente, en orden cronologico inverso. */
+export function useNotas(clienteId: string | null) {
   const repositorios = useRepositorios()
   return useConsulta(
-    async () => (id ? ((await repositorios.clientes.obtener(id)) ?? null) : null),
-    [repositorios, id],
+    async () => (clienteId ? await repositorios.clientes.listarNotas(clienteId) : []),
+    [repositorios, clienteId],
   )
+}
+
+/** Historico completo de ventas de un cliente, del mas reciente al mas antiguo. */
+export function useVentasCliente(clienteId: string | null) {
+  const repositorios = useRepositorios()
+  return useConsulta(async () => {
+    if (!clienteId) return []
+    const ventas = await repositorios.ventas.listarPorCliente(clienteId)
+    return ventas.filter((v) => v.valor > 0).sort((a, b) => b.periodo.localeCompare(a.periodo))
+  }, [repositorios, clienteId])
 }

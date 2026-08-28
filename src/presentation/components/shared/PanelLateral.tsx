@@ -55,9 +55,11 @@ export function PanelLateral({
 
   return (
     <div className="fixed inset-0 z-50 no-imprimir" data-panel-lateral>
-      <button
-        type="button"
-        aria-label="Cerrar"
+      {/* La capa de fondo se oculta a los lectores de pantalla: duplicaba el
+          nombre accesible del botón «Cerrar» del pie y no aporta nada, porque
+          para el teclado ya están la tecla Escape y la X del encabezado. */}
+      <div
+        aria-hidden="true"
         onClick={onCerrar}
         className="absolute inset-0 bg-black/25 dark:bg-black/50"
       />

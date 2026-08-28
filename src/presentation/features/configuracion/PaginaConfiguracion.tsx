@@ -4,6 +4,7 @@ import { EncabezadoPagina } from '@/presentation/components/shared/EncabezadoPag
 import { Tarjeta } from '@/presentation/components/shared/Tarjeta'
 import { ModuloPendiente } from '@/presentation/components/shared/ModuloPendiente'
 import { ConmutadorTema } from '@/presentation/components/shared/ConmutadorTema'
+import { UmbralesNegocio } from './UmbralesNegocio'
 import { useResumenBase } from '@/presentation/hooks/data/useResumenBase'
 import { formatearNumero } from '@/lib/formato'
 import { solicitarAlmacenamientoPersistente } from '@/lib/almacenamiento'
@@ -87,6 +88,8 @@ export default function PaginaConfiguracion() {
           </Fila>
         </Tarjeta>
 
+        <UmbralesNegocio />
+
         <div className="rounded-panel border-l-2 border-alerta bg-alerta-suave px-5 py-4">
           <p className="text-sm text-texto">
             <strong className="font-medium">Los datos viven en este navegador.</strong> Limpiar los
@@ -107,16 +110,6 @@ export default function PaginaConfiguracion() {
           ]}
         />
 
-        <ModuloPendiente
-          sprint="Llega en el Sprint 4"
-          objetivo="Ajustar los umbrales de negocio al ciclo de compra real del territorio."
-          incluye={[
-            'Meses sin comprar para considerar un cliente inactivo',
-            'Caída porcentual que marca a un cliente en riesgo',
-            'Cortes de Pareto para la clasificación ABC',
-            'Umbrales de color del semáforo de cumplimiento',
-          ]}
-        />
       </div>
     </>
   )

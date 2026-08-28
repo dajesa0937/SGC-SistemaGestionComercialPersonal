@@ -14,7 +14,7 @@ interface Props {
 export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar }: Props) {
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2 no-imprimir">
-      <div className="relative min-w-56 flex-1">
+      <div className="relative min-w-52 flex-1">
         <Search
           className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-tenue"
           aria-hidden="true"
@@ -39,7 +39,7 @@ export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar 
         id="filtro-zona"
         value={filtros.zona}
         onChange={(evento) => onCambiar({ zona: evento.target.value })}
-        className="w-auto min-w-36"
+        className="w-auto min-w-32"
       >
         <option value="">Todas las zonas</option>
         {zonas.map((zona) => (
@@ -58,12 +58,31 @@ export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar 
         onChange={(evento) =>
           onCambiar({ estado: evento.target.value as FiltrosClientes['estado'] })
         }
-        className="w-auto min-w-36"
+        className="w-auto min-w-32"
       >
         <option value="">Todos los estados</option>
-        <option value="cliente">Cliente</option>
-        <option value="prospecto">Prospecto</option>
-        <option value="suspendido">Suspendido</option>
+        <option value="nuevo">Nuevos</option>
+        <option value="activo">Activos</option>
+        <option value="en_riesgo">En riesgo</option>
+        <option value="inactivo">Inactivos</option>
+      </Seleccion>
+
+      <label className="sr-only" htmlFor="filtro-abc">
+        Clasificación
+      </label>
+      <Seleccion
+        id="filtro-abc"
+        value={filtros.clasificacion}
+        onChange={(evento) =>
+          onCambiar({ clasificacion: evento.target.value as FiltrosClientes['clasificacion'] })
+        }
+        className="w-auto min-w-28"
+      >
+        <option value="">Todo el ABC</option>
+        <option value="A">Clase A</option>
+        <option value="B">Clase B</option>
+        <option value="C">Clase C</option>
+        <option value="SIN_HISTORIA">Sin historia</option>
       </Seleccion>
 
       <label className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-borde bg-superficie px-2.5 text-sm text-suave">
@@ -73,7 +92,7 @@ export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar 
           onChange={(evento) => onCambiar({ incluirArchivados: evento.target.checked })}
           className="size-3.5 accent-[var(--sgc-acento)]"
         />
-        Ver archivados
+        Archivados
       </label>
 
       {hayFiltros ? (

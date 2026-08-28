@@ -2,8 +2,8 @@
 
 Sistema de Gestión Comercial Personal · Ejecutivo Comercial, Equipos Supra S.A.S.
 
-> **Estado del proyecto:** Sprints 0, 1 y 3 terminados. La aplicación ya responde «¿cómo voy?» con
-> cifras verificadas. El Sprint 2 (importador de Excel) sigue esperando un archivo real (decisión D-03).
+> **Estado del proyecto:** Sprints 0, 1, 3 y 4 terminados. Del MVP solo faltan el importador de
+> Excel (Sprint 2, esperando un archivo real) y los reportes imprimibles (Sprint 5).
 
 ## Documentos
 
@@ -50,6 +50,6 @@ Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
 | 1 · Maestro de clientes | **Terminado** (26-ago-2026) | Cartera completa cargada, consultable e importable desde Excel |
 | 2 · Importación de ventas | Siguiente · **bloqueado por D-03** | El Excel del mes entra completo y correcto |
 | 3 · Presupuesto e indicadores | **Terminado** (28-ago-2026) | **Primer valor real:** la situación comercial en menos de 5 segundos |
-| 4 · Ficha del cliente | Pendiente | Preparar una visita con toda la información en pantalla |
+| 4 · Ficha del cliente | **Terminado** (28-ago-2026) | Preparar una visita con toda la información en pantalla |
 | 5 · Reportes imprimibles | Pendiente | El informe del mes, impreso y presentable |
 | 6 · Confianza y pulido | Pendiente | MVP terminado |

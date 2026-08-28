@@ -213,6 +213,10 @@ export function detectarAlertas(
 
   for (const cliente of clientes) {
     if (cliente.archivado) continue
+    // Un prospecto que nunca ha comprado no es una alerta: es un prospecto.
+    // Meterlo en la lista de "requieren atencion" la llena de ruido y hace que
+    // se deje de mirar, que es la peor forma de perder una alerta.
+    if (cliente.estadoManual === 'prospecto' && !cliente.ultimaCompra) continue
 
     if (cliente.estado === 'inactivo') {
       const meses = cliente.ultimaCompra ? mesesEntre(cliente.ultimaCompra, periodo) : null
