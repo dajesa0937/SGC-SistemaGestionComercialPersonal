@@ -37,8 +37,8 @@ export const SECCIONES: readonly Seccion[] = [
   },
   {
     ruta: '/importar',
-    etiqueta: 'Importar',
-    descripcion: 'Cargar el Excel de ventas',
+    etiqueta: 'Ventas',
+    descripcion: 'Registrar o importar las ventas del mes',
     icono: FileUp,
   },
   {

@@ -2,9 +2,9 @@
 
 Sistema de Gestión Comercial Personal — PWA para administrar un territorio comercial.
 
-> **Estado:** Sprints 0 y 1 terminados. La aplicación arranca, navega, cambia de tema, funciona sin
-> conexión y ya administra la cartera de clientes, con importación del maestro desde Excel.
-> Los indicadores, el presupuesto y los reportes llegan en los sprints 2 a 6.
+> **Estado:** Sprints 0, 1 y 3 terminados. La aplicación administra la cartera, guarda el
+> presupuesto anual, registra ventas y muestra el panel de cumplimiento con proyección de cierre.
+> El importador de Excel (Sprint 2) y los reportes imprimibles (Sprint 5) están pendientes.
 
 ## Puesta en marcha
 
