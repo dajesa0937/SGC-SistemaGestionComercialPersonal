@@ -3,18 +3,19 @@ chcp 65001 >nul
 title SGC Personal
 cd /d "%~dp0"
 echo.
-echo   ============================
+echo   ===================================
 echo    SGC Personal
-echo   ============================
+echo   ===================================
 echo.
 if not exist "node_modules\" (
   echo   Primera vez: instalando dependencias.
-  echo   Esto tarda un par de minutos y solo pasa una vez.
+  echo   Tarda un par de minutos y solo pasa una vez.
   echo.
   call npm install || goto :error
+  echo.
 )
 echo   Preparando la aplicacion...
-call npm run build || goto :error
+call npx vite build || goto :error
 echo.
 echo   Listo. Abriendo http://localhost:4173
 echo.
@@ -26,7 +27,9 @@ goto :fin
 
 :error
 echo.
-echo   Algo fallo. El mensaje del error esta arriba.
+echo   ===================================
+echo    Algo fallo. El error esta arriba.
+echo   ===================================
 echo.
 pause
 

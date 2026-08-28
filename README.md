@@ -12,7 +12,11 @@ Sistema de Gestión Comercial Personal — PWA para administrar un territorio co
 ## Usarla todos los días
 
 **Doble clic en `Iniciar SGC.bat`.** Prepara la aplicación y la abre en
-`http://localhost:4173`. La primera vez tarda un par de minutos porque instala las dependencias.
+`http://localhost:4173`. La primera vez tarda un par de minutos porque instala las dependencias;
+después arranca en segundos.
+
+El arranque diario no verifica tipos ni ejecuta pruebas — eso es trabajo de desarrollo, y hacerlo
+cada mañana solo añadiría medio minuto de espera. Para eso está `npm run verificar`.
 
 Desde el navegador, en el menú de Chrome o Edge, elige **Instalar SGC Personal**. A partir de ahí
 tienes un icono propio y la aplicación abre en su propia ventana, sin barra de direcciones.
