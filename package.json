@@ -9,6 +9,7 @@
     "dev": "vite",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"*.{ts,js,json}\"",
     "iconos": "node scripts/generar-iconos.mjs",
+    "inicio": "npm run build && vite preview --open",
     "lint": "eslint .",
     "municipios": "node scripts/generar-municipios.mjs",
     "preview": "vite preview",

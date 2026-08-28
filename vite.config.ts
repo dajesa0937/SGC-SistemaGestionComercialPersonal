@@ -38,6 +38,26 @@ export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
+
+  /**
+   * El puerto es parte de la identidad de los datos.
+   *
+   * IndexedDB se guarda por origen, y el origen incluye el puerto: lo que se
+   * carga en `localhost:4173` NO existe en `localhost:4174`. Si Vite encontrara
+   * el puerto ocupado y se moviera al siguiente, la aplicacion abriria vacia y
+   * pareceria que se perdio todo.
+   *
+   * `strictPort` evita justo eso: prefiere fallar con un mensaje claro antes que
+   * arrancar en otro puerto y asustar al usuario.
+   */
+  preview: {
+    port: 4173,
+    strictPort: true,
+  },
+  server: {
+    port: 5173,
+    strictPort: true,
+  },
   test: {
     environment: 'jsdom',
     globals: true,

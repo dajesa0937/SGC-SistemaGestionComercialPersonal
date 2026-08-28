@@ -5,6 +5,24 @@ no del manual.
 
 ---
 
+## Cómo abrirla cada día
+
+**Doble clic en `Iniciar SGC.bat`**, en la carpeta del proyecto. La aplicación se abre sola en
+`http://localhost:4173`.
+
+La primera vez, en el menú de Chrome o Edge elige **Instalar SGC Personal**. Después de eso tienes un
+icono propio, la aplicación abre en su propia ventana sin barra de direcciones, y **abre aunque no
+ejecutes nada y aunque no tengas internet**: queda guardada entera dentro del navegador.
+
+Solo vuelves a ejecutar `Iniciar SGC.bat` cuando haya cambios en el código.
+
+> **Ojo con el puerto.** Tus datos se guardan por dirección, y la dirección incluye el número del
+> puerto. Lo que cargues en `localhost:4173` no aparece en `localhost:5173`, aunque sea la misma
+> aplicación. El de uso diario es **4173**. Si ya tenías datos en el otro, descarga el respaldo allí
+> y restáuralo aquí.
+
+---
+
 ## Lo primero: tus datos viven en este navegador
 
 No hay servidor. Todo está guardado en el navegador de este equipo. Eso hace que la aplicación sea

@@ -9,7 +9,33 @@ Sistema de Gestión Comercial Personal — PWA para administrar un territorio co
 >
 > La cartera se administra por **municipio DANE** (los 1.122 del país) y por **zonas que tú defines**.
 
-## Puesta en marcha
+## Usarla todos los días
+
+**Doble clic en `Iniciar SGC.bat`.** Prepara la aplicación y la abre en
+`http://localhost:4173`. La primera vez tarda un par de minutos porque instala las dependencias.
+
+Desde el navegador, en el menú de Chrome o Edge, elige **Instalar SGC Personal**. A partir de ahí
+tienes un icono propio y la aplicación abre en su propia ventana, sin barra de direcciones.
+
+**Una vez instalada, abre aunque no ejecutes nada.** La aplicación se guarda entera en el navegador,
+así que funciona sin internet y sin el servidor encendido. Solo necesitas volver a ejecutar
+`Iniciar SGC.bat` cuando haya cambios en el código.
+
+### El puerto es parte de tus datos
+
+Los datos viven en el navegador y se guardan **por origen**, y el origen incluye el puerto. Lo que
+cargues en `localhost:4173` **no existe** en `localhost:5173`.
+
+- `Iniciar SGC.bat` y `npm run inicio` → `http://localhost:4173`. **Este es el de uso diario.**
+- `npm run dev` → `http://localhost:5173`. Este es el de desarrollo, con recarga automática.
+
+Son dos bases de datos distintas. Si ya cargaste datos en uno y quieres pasarlos al otro, descarga el
+respaldo desde *Configuración → Respaldo* y restáuralo en el otro. Es exactamente para lo que existe.
+
+Los dos puertos están fijados a propósito: si estuvieran ocupados, la aplicación falla con un mensaje
+claro en vez de arrancar en otro puerto y aparecer vacía.
+
+## Puesta en marcha para desarrollar
 
 ```bash
 npm install
@@ -24,7 +50,8 @@ La aplicación queda en `http://localhost:5173`.
 |---|---|
 | `npm run dev` | Servidor de desarrollo con recarga en caliente |
 | `npm run build` | Verifica tipos y construye para producción |
-| `npm run preview` | Sirve la construcción de producción (aquí sí funciona la PWA) |
+| `npm run inicio` | **Uso diario.** Construye y abre la aplicación en `http://localhost:4173` |
+| `npm run preview` | Sirve la construcción ya hecha, sin volver a construir |
 | `npm run verificar` | Lint + tipos + pruebas. **Ejecutar antes de cada commit.** |
 | `npm run test:watch` | Pruebas en modo observación |
 | `npm run test:cov` | Cobertura (mínimo 90 % en `application/indicadores/`) |
