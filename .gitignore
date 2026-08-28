@@ -8,5 +8,7 @@ coverage
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/launch.json
+# Los archivos reales de la empresa no se versionan; los sintéticos sí.
 docs/ejemplos/*.xlsx
 docs/ejemplos/*.xls
+!docs/ejemplos/ejemplo-*.xlsx
