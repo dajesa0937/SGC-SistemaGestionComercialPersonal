@@ -1,13 +1,23 @@
 import { z } from 'zod'
 import { VERSION_RESPALDO, type Respaldo, type ResumenRespaldo } from '@/domain/respaldo/respaldo.entity'
+import { migrarRespaldo } from './migrarRespaldo'
 
 const periodo = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'periodo con formato AAAA-MM')
 
+/**
+ * Cliente, aceptando a la vez la forma de la v1 y la de la v2.
+ *
+ * Los campos viejos (`nit`, `zona`, `ciudad`) siguen siendo validos al leer
+ * porque un respaldo generado ayer tiene que poder restaurarse hoy. La
+ * conversion a la forma nueva ocurre despues, en `migrarRespaldo`.
+ */
 const cliente = z.object({
   id: z.string().min(1),
   codigo: z.string(),
   nombre: z.string(),
   nombreComercial: z.string().optional(),
+  identificacion: z.string().optional(),
+  municipio: z.string().optional(),
   nit: z.string().optional(),
   zona: z.string().optional(),
   ciudad: z.string().optional(),
@@ -92,6 +102,17 @@ const esquemaRespaldo = z.object({
       }),
     ),
     importaciones: z.array(importacion).default([]),
+    zonas: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          nombre: z.string(),
+          municipios: z.array(z.string()),
+          creadoEn: z.string(),
+          actualizadoEn: z.string(),
+        }),
+      )
+      .default([]),
     configuracion: z.array(z.object({ clave: z.string(), valor: z.unknown() })).default([]),
   }),
 })
@@ -135,15 +156,19 @@ export function validarRespaldo(texto: string): ResultadoValidacion {
     }
   }
 
-  const respaldo = resultado.data as Respaldo
+  const leido = resultado.data as Respaldo
 
-  if (respaldo.version > VERSION_RESPALDO) {
+  if (leido.version > VERSION_RESPALDO) {
     return {
       valido: false,
-      motivo: `El respaldo es de una versión más nueva (v${respaldo.version})`,
+      motivo: `El respaldo es de una versión más nueva (v${leido.version})`,
       detalles: ['Actualiza la aplicación antes de restaurarlo.'],
     }
   }
+
+  // Un respaldo viejo se traduce, no se rechaza. Lo contrario convierte cada
+  // cambio del modelo en una pérdida silenciosa de las copias ya guardadas.
+  const respaldo = migrarRespaldo(leido)
 
   return { valido: true, respaldo, resumen: resumirRespaldo(respaldo) }
 }

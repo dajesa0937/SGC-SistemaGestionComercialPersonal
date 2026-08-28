@@ -1,3 +1,4 @@
+import { etiquetaMunicipio } from '@/domain/geografia/geografia'
 import { useMemo, useState } from 'react'
 import { Download, FileText, Printer, User, Users } from 'lucide-react'
 import { formatearPeriodo, formatearPeriodoCorto } from '@/domain/shared/periodo'
@@ -116,7 +117,7 @@ export default function PaginaReportes() {
               c.codigo,
               c.nombre,
               c.zona ?? '',
-              c.ciudad ?? '',
+              etiquetaMunicipio(c.municipio),
               c.telefono ?? '',
               ETIQUETA_ABC[c.clasificacion],
               ETIQUETA_ESTADO[c.estado],

@@ -29,7 +29,8 @@ const POR_PAGINA = 25
 export default function PaginaClientes() {
   const { periodo } = usePeriodoSeleccionado()
   const { filtros, pagina, actualizar, limpiar, alternarOrden } = useFiltrosClientes()
-  const { visibles, zonas, cargando, totalSinFiltrar, sinVentas } = useClientes(filtros)
+  const { visibles, zonas, departamentos, cargando, totalSinFiltrar, sinVentas } =
+    useClientes(filtros)
 
   const [enFicha, setEnFicha] = useState<ClienteEnriquecido | null>(null)
   const [editando, setEditando] = useState<ClienteEnriquecido | null>(null)
@@ -45,7 +46,10 @@ export default function PaginaClientes() {
   // veinticinco de la tabla.
   const descripcionFiltros = [
     filtros.texto ? `búsqueda "${filtros.texto}"` : null,
-    filtros.zona ? `zona ${filtros.zona}` : null,
+    filtros.zona ? `zona ${zonas.find((z) => z.valor === filtros.zona)?.etiqueta ?? ''}` : null,
+    filtros.departamento
+      ? `departamento ${departamentos.find((d) => d.valor === filtros.departamento)?.etiqueta ?? ''}`
+      : null,
     filtros.estado ? `estado ${ETIQUETA_ESTADO[filtros.estado]}` : null,
     filtros.clasificacion ? `clase ${filtros.clasificacion}` : null,
   ]
@@ -54,12 +58,14 @@ export default function PaginaClientes() {
 
   const exportarCsv = () => {
     const filas: (string | number)[][] = [
-      ['Codigo', 'Cliente', 'Zona', 'Ciudad', 'Telefono', 'Correo', 'ABC', 'Estado', 'Venta mes', 'Venta ano', 'Ultima compra'],
+      ['Identificacion', 'Codigo', 'Cliente', 'Zona', 'Municipio', 'Departamento', 'Telefono', 'Correo', 'ABC', 'Estado', 'Venta mes', 'Venta ano', 'Ultima compra'],
       ...visibles.map((c) => [
+        c.identificacion ?? '',
         c.codigo,
         c.nombre,
         c.zona ?? '',
-        c.ciudad ?? '',
+        c.nombreMunicipio ?? '',
+        c.departamento ?? '',
         c.telefono ?? '',
         c.email ?? '',
         ETIQUETA_ABC[c.clasificacion],
@@ -93,7 +99,8 @@ export default function PaginaClientes() {
           <div className="min-w-0">
             <p className="truncate font-medium text-texto">{cliente.nombre}</p>
             <p className="cifra truncate text-xs text-tenue">
-              {cliente.codigo}
+              {cliente.identificacion ?? cliente.codigo}
+              {cliente.nombreMunicipio ? ` · ${cliente.nombreMunicipio}` : ''}
               {cliente.zona ? ` · ${cliente.zona}` : ''}
             </p>
           </div>
@@ -228,6 +235,7 @@ export default function PaginaClientes() {
       <BarraFiltros
         filtros={filtros}
         zonas={zonas}
+        departamentos={departamentos}
         hayFiltros={conFiltros}
         onCambiar={actualizar}
         onLimpiar={limpiar}
@@ -285,7 +293,6 @@ export default function PaginaClientes() {
       <FormularioCliente
         abierto={formularioAbierto}
         cliente={editando}
-        zonasSugeridas={zonas}
         onCerrar={() => setFormularioAbierto(false)}
       />
 

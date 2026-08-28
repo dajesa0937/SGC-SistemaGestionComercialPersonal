@@ -1,3 +1,4 @@
+import { etiquetaMunicipio } from '@/domain/geografia/geografia'
 import { useState } from 'react'
 import { Pencil, Plus, Printer, Trash2 } from 'lucide-react'
 import type { ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
@@ -334,9 +335,9 @@ export function FichaCliente({ cliente, onCerrar, onEditar }: Props) {
           <Dato etiqueta="Razón social" valor={cliente.nombre} />
           <Dato etiqueta="Nombre comercial" valor={cliente.nombreComercial} />
           <Dato etiqueta="Código" valor={cliente.codigo} />
-          <Dato etiqueta="NIT" valor={cliente.nit} />
+          <Dato etiqueta="Identificación" valor={cliente.identificacion} />
           <Dato etiqueta="Zona" valor={cliente.zona} />
-          <Dato etiqueta="Ciudad" valor={cliente.ciudad} />
+          <Dato etiqueta="Municipio" valor={etiquetaMunicipio(cliente.municipio)} />
           <Dato etiqueta="Dirección" valor={cliente.direccion} />
           <Dato etiqueta="Teléfono" valor={cliente.telefono} />
           <Dato etiqueta="Correo" valor={cliente.email} />

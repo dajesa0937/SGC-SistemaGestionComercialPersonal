@@ -66,15 +66,32 @@ describe('detectarColumnas', () => {
 
   it('reconoce los encabezados habituales de un maestro real', () => {
     const m = detectarColumnas(
-      ['COD. CLIENTE', 'RAZON SOCIAL', 'NIT', 'MUNICIPIO', 'RUTA', 'CELULAR'],
+      ['COD. CLIENTE', 'RAZON SOCIAL', 'NIT', 'MUNICIPIO', 'CELULAR'],
       CAMPOS_MAESTRO_CLIENTES,
     )
     expect(m['codigo']).toBe(0)
     expect(m['nombre']).toBe(1)
-    expect(m['nit']).toBe(2)
-    expect(m['ciudad']).toBe(3)
-    expect(m['zona']).toBe(4)
-    expect(m['telefono']).toBe(5)
+    expect(m['identificacion']).toBe(2)
+    expect(m['municipio']).toBe(3)
+    expect(m['telefono']).toBe(4)
+  })
+
+  it('reconoce el maestro real tal como llega, con los «(Obligatorio)» incluidos', () => {
+    const m = detectarColumnas(
+      [
+        'Identificación (Obligatorio)',
+        'Razón social (Obligatorio)',
+        'Dirección',
+        'CIUDAD',
+        'Teléfono principal',
+      ],
+      CAMPOS_MAESTRO_CLIENTES,
+    )
+    expect(m['identificacion']).toBe(0)
+    expect(m['nombre']).toBe(1)
+    expect(m['direccion']).toBe(2)
+    expect(m['municipio']).toBe(3)
+    expect(m['telefono']).toBe(4)
   })
 })
 

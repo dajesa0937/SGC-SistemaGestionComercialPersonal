@@ -1,4 +1,6 @@
 import type { Cliente, NuevoCliente } from '@/domain/cliente/cliente.entity'
+import { normalizarIdentificacion } from '@/domain/cliente/identificacion'
+import { municipioPorNombre, normalizarCodigoMunicipio } from '@/domain/geografia/geografia'
 import type { MapeoDetectado } from './detectarColumnas'
 
 /** Rejilla del archivo: filas de celdas ya convertidas a texto. */
@@ -25,9 +27,8 @@ export interface PrevisualizacionMaestro {
 
 const CAMPOS_TEXTO = [
   'nombreComercial',
-  'nit',
-  'zona',
-  'ciudad',
+  'identificacion',
+  'municipio',
   'direccion',
   'telefono',
   'email',
@@ -44,6 +45,18 @@ function opcional(valor: string): string | undefined {
 }
 
 /**
+ * Lee la columna de municipio, venga como esta o como se llame.
+ *
+ * El maestro real trae el codigo DANE («68001»); otros archivos traen el nombre
+ * escrito. Se aceptan los dos, pero un nombre ambiguo —«San Pablo» existe en
+ * tres departamentos— se deja sin resolver antes que resolverlo mal.
+ */
+function leerMunicipio(valor: string): string | undefined {
+  if (valor === '') return undefined
+  return normalizarCodigoMunicipio(valor) ?? municipioPorNombre(valor)
+}
+
+/**
  * Analiza la rejilla del archivo y describe que pasaria al aplicarla.
  *
  * Es una funcion pura: no escribe nada. La vista previa obligatoria antes de
@@ -56,8 +69,14 @@ export function analizarMaestroClientes(
   filaEncabezado: number,
   existentes: readonly Cliente[],
 ): PrevisualizacionMaestro {
+  // La identificacion manda sobre el codigo: es la llave que sobrevivio al
+  // cruce de los archivos reales de la empresa. El codigo queda de respaldo
+  // para archivos que no traigan NIT.
+  const porIdentificacion = new Map(
+    existentes.filter((c) => c.identificacion).map((c) => [c.identificacion!, c]),
+  )
   const porCodigo = new Map(existentes.map((c) => [c.codigo.trim().toUpperCase(), c]))
-  const codigosEnArchivo = new Set<string>()
+  const clavesEnArchivo = new Set<string>()
 
   const nuevos: FilaMaestro[] = []
   const actualizados: { fila: FilaMaestro; actual: Cliente }[] = []
@@ -75,32 +94,37 @@ export function analizarMaestroClientes(
     totalFilas++
     const numeroFila = indice + 1
 
-    const codigo = celda(fila, mapeo['codigo'])
+    const identificacion = normalizarIdentificacion(celda(fila, mapeo['identificacion']))
+    const codigoArchivo = celda(fila, mapeo['codigo'])
     const nombre = celda(fila, mapeo['nombre'])
 
-    if (codigo === '') {
-      errores.push({ numeroFila, motivo: 'Sin código de cliente' })
+    if (identificacion === undefined && codigoArchivo === '') {
+      errores.push({ numeroFila, motivo: 'Sin identificación ni código de cliente' })
       continue
     }
     if (nombre === '') {
-      errores.push({ numeroFila, motivo: `Sin nombre (código ${codigo})` })
+      const referencia = identificacion ?? codigoArchivo
+      errores.push({ numeroFila, motivo: `Sin nombre (${referencia})` })
       continue
     }
 
-    const clave = codigo.toUpperCase()
-    if (codigosEnArchivo.has(clave)) {
-      errores.push({ numeroFila, motivo: `El código ${codigo} aparece repetido en el archivo` })
+    // Cuando el archivo no trae codigo propio, la identificacion hace de codigo:
+    // asi el cliente siempre tiene una referencia visible.
+    const codigo = codigoArchivo !== '' ? codigoArchivo : (identificacion ?? '')
+
+    const clave = identificacion ?? codigo.toUpperCase()
+    if (clavesEnArchivo.has(clave)) {
+      errores.push({ numeroFila, motivo: `${clave} aparece repetido en el archivo` })
       continue
     }
-    codigosEnArchivo.add(clave)
+    clavesEnArchivo.add(clave)
 
     const datos: NuevoCliente = {
       codigo,
       nombre,
       nombreComercial: opcional(celda(fila, mapeo['nombreComercial'])),
-      nit: opcional(celda(fila, mapeo['nit'])),
-      zona: opcional(celda(fila, mapeo['zona'])),
-      ciudad: opcional(celda(fila, mapeo['ciudad'])),
+      identificacion,
+      municipio: leerMunicipio(celda(fila, mapeo['municipio'])),
       direccion: opcional(celda(fila, mapeo['direccion'])),
       telefono: opcional(celda(fila, mapeo['telefono'])),
       email: opcional(celda(fila, mapeo['email'])),
@@ -108,7 +132,9 @@ export function analizarMaestroClientes(
       estadoManual: 'cliente',
     }
 
-    const actual = porCodigo.get(clave)
+    const actual =
+      (identificacion ? porIdentificacion.get(identificacion) : undefined) ??
+      porCodigo.get(codigo.toUpperCase())
     if (!actual) {
       nuevos.push({ numeroFila, datos })
       continue

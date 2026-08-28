@@ -7,6 +7,9 @@ import type {
 } from '@/domain/cliente/cliente.entity'
 import type { VentaMensual } from '@/domain/venta/venta.entity'
 import type { ConfiguracionNegocio } from '@/domain/config/configuracion.entity'
+import type { Zona } from '@/domain/geografia/zona.entity'
+import { indexarZonasPorMunicipio } from '@/domain/geografia/zona.entity'
+import { resolverMunicipio } from '@/domain/geografia/geografia'
 import {
   anioDe,
   compararPeriodos,
@@ -114,17 +117,25 @@ export function derivarEstado(
   return 'activo'
 }
 
-/** Combina cada cliente con sus indicadores calculados. */
+/**
+ * Combina cada cliente con sus indicadores calculados.
+ *
+ * La zona tambien se calcula aqui, no se guarda: sale del municipio del cliente
+ * y del mapa de zonas que el usuario definio. Cambiar una zona reetiqueta a sus
+ * clientes en el acto, sin reescribir un solo registro.
+ */
 export function enriquecerClientes(
   clientes: readonly Cliente[],
   ventas: readonly VentaMensual[],
   periodo: Periodo,
   config: ConfiguracionNegocio,
+  zonas: readonly Zona[] = [],
 ): ClienteEnriquecido[] {
   const porCliente = agruparPorCliente(ventas)
   const abc = clasificarABC(porCliente, periodo, config)
   const ventana12 = ultimosPeriodos(periodo, 12)
   const inicioAnio = `${anioDe(periodo)}-01`
+  const zonaDe = indexarZonasPorMunicipio(zonas)
 
   return clientes.map((cliente) => {
     const porPeriodo = porCliente.get(cliente.id)
@@ -143,8 +154,15 @@ export function enriquecerClientes(
       for (const p of ventana12) venta12Meses += porPeriodo.get(p) ?? 0
     }
 
+    const municipio = cliente.municipio ? resolverMunicipio(cliente.municipio) : undefined
+    const zona = cliente.municipio ? zonaDe.get(cliente.municipio) : undefined
+
     return {
       ...cliente,
+      nombreMunicipio: municipio?.nombre,
+      departamento: municipio?.departamento,
+      zonaId: zona?.id,
+      zona: zona?.nombre,
       clasificacion: abc.get(cliente.id) ?? 'SIN_HISTORIA',
       estado: derivarEstado(porPeriodo, periodo, config),
       ventaPeriodo,

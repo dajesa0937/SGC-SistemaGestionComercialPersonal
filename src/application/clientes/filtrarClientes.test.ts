@@ -3,10 +3,16 @@ import type { ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
 import {
   FILTROS_POR_DEFECTO,
   coincideConTexto,
+  departamentosDisponibles,
   filtrarClientes,
   hayFiltrosActivos,
   zonasDisponibles,
 } from './filtrarClientes'
+
+// Municipios y zonas reales del territorio, para que las pruebas fallen por lo
+// mismo que fallaría la aplicación.
+const MAGDALENA_MEDIO = 'zona-magdalena-medio'
+const SABANAS = 'zona-sabanas'
 
 function cliente(
   parcial: Partial<ClienteEnriquecido> & { codigo: string; nombre: string },
@@ -33,8 +39,12 @@ const CARTERA: ClienteEnriquecido[] = [
   cliente({
     codigo: 'C-010',
     nombre: 'Ferretería El Tornillo',
-    zona: 'Ibagué',
-    nit: '900123456',
+    zonaId: MAGDALENA_MEDIO,
+    zona: 'Magdalena Medio',
+    municipio: '68081',
+    nombreMunicipio: 'Barrancabermeja',
+    departamento: 'Santander',
+    identificacion: '900123456',
     clasificacion: 'A',
     estado: 'activo',
     ventaPeriodo: 20_000_000,
@@ -44,7 +54,11 @@ const CARTERA: ClienteEnriquecido[] = [
   cliente({
     codigo: 'C-002',
     nombre: 'Agroinsumos del Sur',
-    zona: 'Espinal',
+    zonaId: SABANAS,
+    zona: 'Sabanas de Sucre',
+    municipio: '70713',
+    nombreMunicipio: 'San Onofre',
+    departamento: 'Sucre',
     clasificacion: 'A',
     estado: 'nuevo',
     ventaPeriodo: 19_200_000,
@@ -53,8 +67,12 @@ const CARTERA: ClienteEnriquecido[] = [
   }),
   cliente({
     codigo: 'C-100',
-    nombre: 'Maquinaria Tolima',
-    zona: 'Ibagué',
+    nombre: 'Maquinaria del Río',
+    zonaId: MAGDALENA_MEDIO,
+    zona: 'Magdalena Medio',
+    municipio: '68575',
+    nombreMunicipio: 'Puerto Wilches',
+    departamento: 'Santander',
     clasificacion: 'B',
     estado: 'en_riesgo',
     ventaPeriodo: 2_000_000,
@@ -72,7 +90,11 @@ const CARTERA: ClienteEnriquecido[] = [
   cliente({
     codigo: 'C-999',
     nombre: 'Cliente Retirado',
-    zona: 'Espinal',
+    zonaId: SABANAS,
+    zona: 'Sabanas de Sucre',
+    municipio: '70713',
+    nombreMunicipio: 'San Onofre',
+    departamento: 'Sucre',
     archivado: true,
     estado: 'inactivo',
   }),
@@ -85,9 +107,10 @@ describe('coincideConTexto', () => {
     expect(coincideConTexto(objetivo, 'ferreteria')).toBe(true)
   })
 
-  it('busca también por código y por NIT', () => {
+  it('busca también por código, identificación y municipio', () => {
     expect(coincideConTexto(objetivo, 'C-010')).toBe(true)
     expect(coincideConTexto(objetivo, '900123')).toBe(true)
+    expect(coincideConTexto(objetivo, 'barrancabermeja')).toBe(true)
   })
 
   it('el texto vacío no descarta a nadie', () => {
@@ -107,8 +130,13 @@ describe('filtrarClientes', () => {
   })
 
   it('filtra por zona', () => {
-    const r = filtrarClientes(CARTERA, { ...FILTROS_POR_DEFECTO, zona: 'Ibagué' })
+    const r = filtrarClientes(CARTERA, { ...FILTROS_POR_DEFECTO, zona: MAGDALENA_MEDIO })
     expect(r.map((c) => c.codigo)).toEqual(['C-010', 'C-100'])
+  })
+
+  it('filtra por departamento aunque no haya zonas definidas', () => {
+    const r = filtrarClientes(CARTERA, { ...FILTROS_POR_DEFECTO, departamento: '70' })
+    expect(r.map((c) => c.codigo)).toEqual(['C-002'])
   })
 
   it('filtra por estado derivado', () => {
@@ -124,7 +152,7 @@ describe('filtrarClientes', () => {
   it('combina varios filtros', () => {
     const r = filtrarClientes(CARTERA, {
       ...FILTROS_POR_DEFECTO,
-      zona: 'Ibagué',
+      zona: MAGDALENA_MEDIO,
       clasificacion: 'A',
     })
     expect(r.map((c) => c.codigo)).toEqual(['C-010'])
@@ -136,7 +164,7 @@ describe('filtrarClientes', () => {
       'Agroinsumos del Sur',
       'Distribuciones Ariza',
       'Ferretería El Tornillo',
-      'Maquinaria Tolima',
+      'Maquinaria del Río',
     ])
   })
 
@@ -204,12 +232,28 @@ describe('filtrarClientes', () => {
 })
 
 describe('zonasDisponibles', () => {
-  it('devuelve las zonas sin repetir y ordenadas', () => {
-    expect(zonasDisponibles(CARTERA)).toEqual(['Espinal', 'Ibagué'])
+  it('devuelve las zonas con clientes, sin repetir y ordenadas', () => {
+    expect(zonasDisponibles(CARTERA)).toEqual([
+      { valor: MAGDALENA_MEDIO, etiqueta: 'Magdalena Medio' },
+      { valor: SABANAS, etiqueta: 'Sabanas de Sucre' },
+    ])
   })
 
-  it('ignora las zonas vacías', () => {
-    expect(zonasDisponibles([{ zona: '   ' }])).toEqual([])
+  it('ignora a los clientes sin zona', () => {
+    expect(zonasDisponibles([{}, { zonaId: undefined, zona: undefined }])).toEqual([])
+  })
+})
+
+describe('departamentosDisponibles', () => {
+  it('lista los departamentos con clientes, ordenados por nombre', () => {
+    expect(departamentosDisponibles(CARTERA)).toEqual([
+      { valor: '68', etiqueta: 'Santander' },
+      { valor: '70', etiqueta: 'Sucre' },
+    ])
+  })
+
+  it('un cliente sin municipio no inventa departamento', () => {
+    expect(departamentosDisponibles([{}])).toEqual([])
   })
 })
 
@@ -224,6 +268,10 @@ describe('hayFiltrosActivos', () => {
 
   it('una búsqueda de solo espacios está inactiva', () => {
     expect(hayFiltrosActivos({ ...FILTROS_POR_DEFECTO, texto: '   ' })).toBe(false)
+  })
+
+  it('detecta el departamento como filtro', () => {
+    expect(hayFiltrosActivos({ ...FILTROS_POR_DEFECTO, departamento: '68' })).toBe(true)
   })
 
   it('detecta la clasificación como filtro', () => {

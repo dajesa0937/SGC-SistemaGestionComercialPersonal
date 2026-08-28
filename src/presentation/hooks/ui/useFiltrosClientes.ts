@@ -12,6 +12,7 @@ const ORDENES: readonly OrdenClientes[] = [
   'nombre',
   'codigo',
   'zona',
+  'municipio',
   'ventaPeriodo',
   'ventaAnio',
   'ultimaCompra',
@@ -48,6 +49,7 @@ export function useFiltrosClientes() {
     return {
       texto: parametros.get('q') ?? '',
       zona: parametros.get('zona') ?? '',
+      departamento: parametros.get('depto') ?? '',
       estado: ESTADOS.includes(estado as EstadoCliente) ? (estado as EstadoCliente) : '',
       clasificacion: CLASES.includes(clase as ClasificacionABC) ? (clase as ClasificacionABC) : '',
       incluirArchivados: parametros.get('archivados') === '1',
@@ -72,6 +74,7 @@ export function useFiltrosClientes() {
 
           if (cambios.texto !== undefined) fijar('q', cambios.texto, '')
           if (cambios.zona !== undefined) fijar('zona', cambios.zona, '')
+          if (cambios.departamento !== undefined) fijar('depto', cambios.departamento, '')
           if (cambios.estado !== undefined) fijar('estado', cambios.estado, '')
           if (cambios.clasificacion !== undefined) fijar('abc', cambios.clasificacion, '')
           if (cambios.incluirArchivados !== undefined) {

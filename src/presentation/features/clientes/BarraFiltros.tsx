@@ -1,17 +1,25 @@
 import { Search, X } from 'lucide-react'
-import type { FiltrosClientes } from '@/application/clientes/filtrarClientes'
+import type { FiltrosClientes, OpcionFiltro } from '@/application/clientes/filtrarClientes'
 import { Seleccion } from '@/presentation/components/shared/Campo'
 import { Boton } from '@/presentation/components/shared/Boton'
 
 interface Props {
   filtros: FiltrosClientes
-  zonas: readonly string[]
+  zonas: readonly OpcionFiltro[]
+  departamentos: readonly OpcionFiltro[]
   hayFiltros: boolean
   onCambiar: (cambios: Partial<FiltrosClientes>) => void
   onLimpiar: () => void
 }
 
-export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar }: Props) {
+export function BarraFiltros({
+  filtros,
+  zonas,
+  departamentos,
+  hayFiltros,
+  onCambiar,
+  onLimpiar,
+}: Props) {
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2 no-imprimir">
       <div className="relative min-w-52 flex-1">
@@ -26,7 +34,7 @@ export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar 
           id="buscar-cliente"
           type="search"
           value={filtros.texto}
-          placeholder="Buscar por nombre, código o NIT…"
+          placeholder="Buscar por nombre, identificación o municipio…"
           onChange={(evento) => onCambiar({ texto: evento.target.value })}
           className="h-9 w-full rounded-md border border-borde bg-superficie pr-2.5 pl-8 text-sm text-texto placeholder:text-tenue"
         />
@@ -43,8 +51,25 @@ export function BarraFiltros({ filtros, zonas, hayFiltros, onCambiar, onLimpiar 
       >
         <option value="">Todas las zonas</option>
         {zonas.map((zona) => (
-          <option key={zona} value={zona}>
-            {zona}
+          <option key={zona.valor} value={zona.valor}>
+            {zona.etiqueta}
+          </option>
+        ))}
+      </Seleccion>
+
+      <label className="sr-only" htmlFor="filtro-departamento">
+        Departamento
+      </label>
+      <Seleccion
+        id="filtro-departamento"
+        value={filtros.departamento}
+        onChange={(evento) => onCambiar({ departamento: evento.target.value })}
+        className="w-auto min-w-36"
+      >
+        <option value="">Todo el país</option>
+        {departamentos.map((departamento) => (
+          <option key={departamento.valor} value={departamento.valor}>
+            {departamento.etiqueta}
           </option>
         ))}
       </Seleccion>

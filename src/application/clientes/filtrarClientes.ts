@@ -9,6 +9,7 @@ export type OrdenClientes =
   | 'nombre'
   | 'codigo'
   | 'zona'
+  | 'municipio'
   | 'ventaPeriodo'
   | 'ventaAnio'
   | 'ultimaCompra'
@@ -16,10 +17,12 @@ export type OrdenClientes =
 export type DireccionOrden = 'asc' | 'desc'
 
 export interface FiltrosClientes {
-  /** Busqueda libre sobre nombre, nombre comercial, codigo y NIT. */
+  /** Busqueda libre sobre nombre, nombre comercial, codigo e identificacion. */
   texto: string
-  /** Cadena vacia = todas las zonas. */
+  /** Id de zona. Cadena vacia = todas las zonas. */
   zona: string
+  /** Codigo de departamento (dos digitos). Cadena vacia = todo el pais. */
+  departamento: string
   /**
    * Estado derivado del comportamiento de compra, no el asignado a mano.
    *
@@ -37,6 +40,7 @@ export interface FiltrosClientes {
 export const FILTROS_POR_DEFECTO: FiltrosClientes = {
   texto: '',
   zona: '',
+  departamento: '',
   estado: '',
   clasificacion: '',
   incluirArchivados: false,
@@ -52,13 +56,25 @@ export const FILTROS_POR_DEFECTO: FiltrosClientes = {
  * hostilidad gratuita.
  */
 export function coincideConTexto(
-  cliente: { nombre: string; nombreComercial?: string; codigo: string; nit?: string },
+  cliente: {
+    nombre: string
+    nombreComercial?: string
+    codigo: string
+    identificacion?: string
+    nombreMunicipio?: string
+  },
   texto: string,
 ): boolean {
   const consulta = normalizarParaConciliar(texto)
   if (consulta === '') return true
 
-  const campos = [cliente.nombre, cliente.nombreComercial ?? '', cliente.codigo, cliente.nit ?? '']
+  const campos = [
+    cliente.nombre,
+    cliente.nombreComercial ?? '',
+    cliente.codigo,
+    cliente.identificacion ?? '',
+    cliente.nombreMunicipio ?? '',
+  ]
   return campos.some((campo) => normalizarParaConciliar(campo).includes(consulta))
 }
 
@@ -71,6 +87,7 @@ export function coincideConTexto(
  */
 function sinValor(cliente: ClienteEnriquecido, orden: OrdenClientes): boolean {
   if (orden === 'zona') return !cliente.zona
+  if (orden === 'municipio') return !cliente.nombreMunicipio
   if (orden === 'ultimaCompra') return !cliente.ultimaCompra
   return false
 }
@@ -82,6 +99,8 @@ function comparar(a: ClienteEnriquecido, b: ClienteEnriquecido, orden: OrdenClie
       return a.codigo.localeCompare(b.codigo, 'es', { numeric: true })
     case 'zona':
       return (a.zona ?? '').localeCompare(b.zona ?? '', 'es')
+    case 'municipio':
+      return (a.nombreMunicipio ?? '').localeCompare(b.nombreMunicipio ?? '', 'es')
     case 'ventaPeriodo':
       return a.ventaPeriodo - b.ventaPeriodo
     case 'ventaAnio':
@@ -100,7 +119,13 @@ export function filtrarClientes(
 ): ClienteEnriquecido[] {
   const resultado = clientes.filter((cliente) => {
     if (!filtros.incluirArchivados && cliente.archivado) return false
-    if (filtros.zona !== '' && (cliente.zona ?? '') !== filtros.zona) return false
+    if (filtros.zona !== '' && (cliente.zonaId ?? '') !== filtros.zona) return false
+    if (
+      filtros.departamento !== '' &&
+      (cliente.municipio ?? '').slice(0, 2) !== filtros.departamento
+    ) {
+      return false
+    }
     if (filtros.estado !== '' && cliente.estado !== filtros.estado) return false
     if (filtros.clasificacion !== '' && cliente.clasificacion !== filtros.clasificacion) return false
     return coincideConTexto(cliente, filtros.texto)
@@ -124,14 +149,42 @@ export function filtrarClientes(
   })
 }
 
-/** Zonas presentes en la cartera, ordenadas y sin repetir. */
-export function zonasDisponibles(clientes: readonly { zona?: string }[]): string[] {
-  const zonas = new Set<string>()
+export interface OpcionFiltro {
+  readonly valor: string
+  readonly etiqueta: string
+}
+
+/**
+ * Zonas con al menos un cliente, para el desplegable del filtro.
+ *
+ * Se listan las que tienen clientes y no todas las definidas: un filtro que
+ * ofrece opciones que no devuelven nada es un filtro que miente.
+ */
+export function zonasDisponibles(
+  clientes: readonly { zonaId?: string; zona?: string }[],
+): OpcionFiltro[] {
+  const zonas = new Map<string, string>()
   for (const cliente of clientes) {
-    const zona = cliente.zona?.trim()
-    if (zona) zonas.add(zona)
+    if (cliente.zonaId && cliente.zona) zonas.set(cliente.zonaId, cliente.zona)
   }
-  return [...zonas].sort((a, b) => a.localeCompare(b, 'es'))
+  return [...zonas.entries()]
+    .map(([valor, etiqueta]) => ({ valor, etiqueta }))
+    .sort((a, b) => a.etiqueta.localeCompare(b.etiqueta, 'es'))
+}
+
+/** Departamentos con al menos un cliente. */
+export function departamentosDisponibles(
+  clientes: readonly { municipio?: string; departamento?: string }[],
+): OpcionFiltro[] {
+  const departamentos = new Map<string, string>()
+  for (const cliente of clientes) {
+    if (cliente.municipio && cliente.departamento) {
+      departamentos.set(cliente.municipio.slice(0, 2), cliente.departamento)
+    }
+  }
+  return [...departamentos.entries()]
+    .map(([valor, etiqueta]) => ({ valor, etiqueta }))
+    .sort((a, b) => a.etiqueta.localeCompare(b.etiqueta, 'es'))
 }
 
 /** Indica si hay algun filtro activo, para decidir que estado vacio mostrar. */
@@ -139,6 +192,7 @@ export function hayFiltrosActivos(filtros: FiltrosClientes): boolean {
   return (
     filtros.texto.trim() !== '' ||
     filtros.zona !== '' ||
+    filtros.departamento !== '' ||
     filtros.estado !== '' ||
     filtros.clasificacion !== '' ||
     filtros.incluirArchivados

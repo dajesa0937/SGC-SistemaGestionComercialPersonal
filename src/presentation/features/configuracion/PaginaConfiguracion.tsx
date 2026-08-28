@@ -5,6 +5,7 @@ import { Tarjeta } from '@/presentation/components/shared/Tarjeta'
 import { ConmutadorTema } from '@/presentation/components/shared/ConmutadorTema'
 import { UmbralesNegocio } from './UmbralesNegocio'
 import { Respaldo } from './Respaldo'
+import { Zonas } from './Zonas'
 import { useResumenBase } from '@/presentation/hooks/data/useResumenBase'
 import { formatearNumero } from '@/lib/formato'
 import { solicitarAlmacenamientoPersistente } from '@/lib/almacenamiento'
@@ -46,7 +47,7 @@ export default function PaginaConfiguracion() {
     <>
       <EncabezadoPagina
         titulo="Configuración"
-        descripcion="Apariencia, estado del almacenamiento y respaldo."
+        descripcion="Zonas, apariencia, estado del almacenamiento y respaldo."
       />
 
       <div className="flex flex-col gap-5">
@@ -87,6 +88,8 @@ export default function PaginaConfiguracion() {
             )}
           </Fila>
         </Tarjeta>
+
+        <Zonas />
 
         <UmbralesNegocio />
 

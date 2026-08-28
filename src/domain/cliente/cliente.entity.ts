@@ -1,4 +1,5 @@
 import type { FechaISO, Id, InstanteISO, Periodo, Pesos } from '../shared/types'
+import type { CodigoMunicipio } from '../geografia/geografia'
 
 /** Estado asignado a mano por el usuario. No confundir con `EstadoCliente`, que es derivado. */
 export type EstadoManualCliente = 'prospecto' | 'cliente' | 'suspendido'
@@ -6,8 +7,15 @@ export type EstadoManualCliente = 'prospecto' | 'cliente' | 'suspendido'
 /**
  * Cliente del territorio.
  *
- * `codigo` es la clave de conciliacion con el archivo que envia la empresa:
- * los nombres en el Excel cambian, el codigo no.
+ * `identificacion` (NIT o cedula) es la clave de conciliacion con los archivos
+ * de la empresa: los nombres cambian de un reporte a otro, el numero no. Es la
+ * unica llave que resistio el cruce de los dos archivos reales.
+ *
+ * `codigo` queda como codigo interno opcional, para cuando el archivo trae uno
+ * distinto de la identificacion.
+ *
+ * No hay campo `zona`: la zona se deduce del municipio a traves de las zonas
+ * que el usuario define. Ver `domain/geografia/zona.entity.ts`.
  *
  * Los clientes nunca se eliminan, solo se archivan: borrarlos huerfanaria su
  * historico de ventas y corromperia todos los comparativos interanuales.
@@ -17,9 +25,10 @@ export interface Cliente {
   codigo: string
   nombre: string
   nombreComercial?: string
-  nit?: string
-  zona?: string
-  ciudad?: string
+  /** NIT o cedula, solo digitos y sin digito de verificacion. Indice unico. */
+  identificacion?: string
+  /** Codigo DANE del municipio, cinco digitos. Ver `domain/geografia`. */
+  municipio?: CodigoMunicipio
   direccion?: string
   telefono?: string
   email?: string
@@ -48,6 +57,12 @@ export type EstadoCliente = 'nuevo' | 'activo' | 'en_riesgo' | 'inactivo'
  * guardarlos crearia dos fuentes de verdad que se desincronizan.
  */
 export interface ClienteEnriquecido extends Cliente {
+  /** Nombre del municipio, o el codigo si el catalogo no lo conoce. */
+  readonly nombreMunicipio?: string
+  readonly departamento?: string
+  /** Zona a la que pertenece su municipio. `undefined` si ninguna lo cubre. */
+  readonly zonaId?: Id
+  readonly zona?: string
   readonly clasificacion: ClasificacionABC
   readonly estado: EstadoCliente
   readonly ventaPeriodo: Pesos

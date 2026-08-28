@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
 import type { ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
 import {
+  departamentosDisponibles,
   filtrarClientes,
   zonasDisponibles,
   type FiltrosClientes,
+  type OpcionFiltro,
 } from '@/application/clientes/filtrarClientes'
 import { useResumen } from './useResumen'
 import { useRepositorios } from './contexto-repositorios'
@@ -11,7 +13,8 @@ import { useConsulta } from './useConsulta'
 
 export interface EstadoClientes {
   readonly visibles: readonly ClienteEnriquecido[]
-  readonly zonas: readonly string[]
+  readonly zonas: readonly OpcionFiltro[]
+  readonly departamentos: readonly OpcionFiltro[]
   readonly cargando: boolean
   readonly totalSinFiltrar: number
   readonly sinVentas: boolean
@@ -33,10 +36,15 @@ export function useClientes(filtros: FiltrosClientes): EstadoClientes {
     [resumen, filtros],
   )
   const zonas = useMemo(() => (resumen ? zonasDisponibles(resumen.clientes) : []), [resumen])
+  const departamentos = useMemo(
+    () => (resumen ? departamentosDisponibles(resumen.clientes) : []),
+    [resumen],
+  )
 
   return {
     visibles,
     zonas,
+    departamentos,
     cargando: resumen === undefined,
     totalSinFiltrar: resumen?.clientes.filter((c) => !c.archivado).length ?? 0,
     sinVentas: resumen?.sinDatos ?? false,

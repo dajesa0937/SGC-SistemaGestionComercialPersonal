@@ -4,6 +4,7 @@ import type { PresupuestoRepository } from './presupuesto/presupuesto.repository
 import type { ImportacionRepository } from './importacion/importacion.repository'
 import type { ConfiguracionRepository } from './config/configuracion.repository'
 import type { RespaldoRepository } from './respaldo/respaldo.repository'
+import type { ZonaRepository } from './geografia/zona.repository'
 
 /**
  * Conjunto de repositorios que la aplicacion necesita.
@@ -18,6 +19,7 @@ export interface Repositorios {
   readonly ventas: VentaRepository
   readonly presupuestos: PresupuestoRepository
   readonly importaciones: ImportacionRepository
+  readonly zonas: ZonaRepository
   readonly configuracion: ConfiguracionRepository
   readonly respaldo: RespaldoRepository
 }

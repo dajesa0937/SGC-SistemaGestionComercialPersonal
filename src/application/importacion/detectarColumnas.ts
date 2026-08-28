@@ -73,7 +73,7 @@ export const CAMPOS_MAESTRO_CLIENTES: readonly CampoObjetivo[] = [
     clave: 'codigo',
     etiqueta: 'Código',
     sinonimos: ['codigo', 'codigo cliente', 'cod', 'cod cliente', 'id', 'id cliente'],
-    requerido: true,
+    requerido: false,
   },
   {
     clave: 'nombre',
@@ -87,12 +87,18 @@ export const CAMPOS_MAESTRO_CLIENTES: readonly CampoObjetivo[] = [
     sinonimos: ['nombre comercial', 'comercial', 'establecimiento'],
     requerido: false,
   },
-  { clave: 'nit', etiqueta: 'NIT', sinonimos: ['nit', 'documento', 'identificacion'], requerido: false },
-  { clave: 'zona', etiqueta: 'Zona', sinonimos: ['zona', 'ruta', 'territorio', 'sector'], requerido: false },
   {
-    clave: 'ciudad',
-    etiqueta: 'Ciudad',
-    sinonimos: ['ciudad', 'municipio', 'poblacion'],
+    clave: 'identificacion',
+    etiqueta: 'Identificación (NIT o cédula)',
+    // «Identificación (Obligatorio)» es el encabezado literal del maestro real:
+    // la deteccion normaliza y compara por prefijo, no por igualdad exacta.
+    sinonimos: ['identificacion', 'nit', 'documento', 'cedula', 'cc', 'rut'],
+    requerido: false,
+  },
+  {
+    clave: 'municipio',
+    etiqueta: 'Municipio (código DANE)',
+    sinonimos: ['ciudad', 'municipio', 'poblacion', 'codigo dane', 'dane'],
     requerido: false,
   },
   {

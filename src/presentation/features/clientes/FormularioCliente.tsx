@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Archive, ArchiveRestore } from 'lucide-react'
 import {
@@ -13,6 +13,7 @@ import { CodigoDeClienteDuplicadoError } from '@/domain/shared/errores'
 import { Boton } from '@/presentation/components/shared/Boton'
 import { Campo, Entrada, Seleccion } from '@/presentation/components/shared/Campo'
 import { PanelLateral } from '@/presentation/components/shared/PanelLateral'
+import { SelectorMunicipio } from '@/presentation/components/shared/SelectorMunicipio'
 import { useRepositorios } from '@/presentation/hooks/data/contexto-repositorios'
 import { useAvisos } from '@/presentation/hooks/ui/contexto-avisos'
 
@@ -20,7 +21,6 @@ interface Props {
   abierto: boolean
   /** `null` = alta de un cliente nuevo. */
   cliente: Cliente | null
-  zonasSugeridas: readonly string[]
   onCerrar: () => void
 }
 
@@ -29,9 +29,8 @@ function aFormulario(cliente: Cliente): DatosFormularioCliente {
     codigo: cliente.codigo,
     nombre: cliente.nombre,
     nombreComercial: cliente.nombreComercial ?? '',
-    nit: cliente.nit ?? '',
-    zona: cliente.zona ?? '',
-    ciudad: cliente.ciudad ?? '',
+    identificacion: cliente.identificacion ?? '',
+    municipio: cliente.municipio ?? '',
     direccion: cliente.direccion ?? '',
     telefono: cliente.telefono ?? '',
     email: cliente.email ?? '',
@@ -40,13 +39,14 @@ function aFormulario(cliente: Cliente): DatosFormularioCliente {
   }
 }
 
-export function FormularioCliente({ abierto, cliente, zonasSugeridas, onCerrar }: Props) {
+export function FormularioCliente({ abierto, cliente, onCerrar }: Props) {
   const repositorios = useRepositorios()
   const { mostrar } = useAvisos()
   const [guardando, setGuardando] = useState(false)
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     setError,
@@ -131,16 +131,20 @@ export function FormularioCliente({ abierto, cliente, zonasSugeridas, onCerrar }
       <form id="formulario-cliente" onSubmit={enviar} className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
           <Campo
-            etiqueta="Código"
+            etiqueta="Identificación"
+            htmlFor="identificacion"
+            error={errors.identificacion?.message}
+            ayuda="NIT o cédula. Es la llave que concilia con los archivos de la empresa"
+          >
+            <Entrada id="identificacion" inputMode="numeric" autoComplete="off" {...register('identificacion')} />
+          </Campo>
+          <Campo
+            etiqueta="Código interno"
             htmlFor="codigo"
-            requerido
             error={errors.codigo?.message}
-            ayuda="El código del sistema de la empresa"
+            ayuda="Solo si el archivo trae un código distinto"
           >
             <Entrada id="codigo" autoComplete="off" {...register('codigo')} />
-          </Campo>
-          <Campo etiqueta="NIT" htmlFor="nit" error={errors.nit?.message}>
-            <Entrada id="nit" autoComplete="off" {...register('nit')} />
           </Campo>
         </div>
 
@@ -162,19 +166,25 @@ export function FormularioCliente({ abierto, cliente, zonasSugeridas, onCerrar }
           <Entrada id="nombreComercial" autoComplete="off" {...register('nombreComercial')} />
         </Campo>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Campo etiqueta="Zona" htmlFor="zona" error={errors.zona?.message}>
-            <Entrada id="zona" list="zonas-sugeridas" autoComplete="off" {...register('zona')} />
-            <datalist id="zonas-sugeridas">
-              {zonasSugeridas.map((zona) => (
-                <option key={zona} value={zona} />
-              ))}
-            </datalist>
-          </Campo>
-          <Campo etiqueta="Ciudad" htmlFor="ciudad" error={errors.ciudad?.message}>
-            <Entrada id="ciudad" autoComplete="off" {...register('ciudad')} />
-          </Campo>
-        </div>
+        <Campo
+          etiqueta="Municipio"
+          htmlFor="municipio"
+          error={errors.municipio?.message}
+          ayuda="La zona comercial sale de aquí: se define en Configuración → Zonas"
+        >
+          <Controller
+            name="municipio"
+            control={control}
+            render={({ field }) => (
+              <SelectorMunicipio
+                id="municipio"
+                valor={field.value}
+                onCambiar={field.onChange}
+                invalido={errors.municipio !== undefined}
+              />
+            )}
+          />
+        </Campo>
 
         <Campo etiqueta="Dirección" htmlFor="direccion" error={errors.direccion?.message}>
           <Entrada id="direccion" autoComplete="off" {...register('direccion')} />

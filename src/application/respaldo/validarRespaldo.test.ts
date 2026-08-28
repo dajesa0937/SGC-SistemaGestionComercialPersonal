@@ -8,7 +8,8 @@ const CONTENIDO = {
       id: 'c1',
       codigo: 'C-001',
       nombre: 'Ferretería El Tornillo',
-      zona: 'Ibagué',
+      identificacion: '900123456',
+      municipio: '68081',
       estadoManual: 'cliente' as const,
       archivado: false,
       creadoEn: '2026-01-01T00:00:00.000Z',
@@ -48,6 +49,7 @@ const CONTENIDO = {
     { id: 'p1', periodo: '2026-08', meta: 50_000_000, actualizadoEn: '2026-08-01T00:00:00.000Z' },
   ],
   importaciones: [],
+  zonas: [],
   configuracion: [{ clave: 'negocio', valor: { mesesParaInactivo: 3 } }],
 }
 

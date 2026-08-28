@@ -26,7 +26,8 @@ hoy no vive en ningún sistema.
 reportes imprimibles → respaldo. Seis semanas más una de fundación.
 
 **Stack.** React 19 + TypeScript + Vite + Tailwind 4 + Dexie/IndexedDB + read-excel-file. Los
-gráficos se dibujan en SVG a mano (ADR 0005). Todo gratuito. Costo de operación: $ 0.
+gráficos se dibujan en SVG a mano (ADR 0005) y el catálogo DANE de los 1.122 municipios del país va
+dentro de la aplicación (ADR 0007). Todo gratuito. Costo de operación: $ 0.
 
 **La regla que sostiene el diseño.** La lógica de negocio no sabe que existe IndexedDB. Esa única regla
 es la que permitirá migrar a SQLite y luego a PostgreSQL sin reescribir la aplicación.
@@ -37,7 +38,8 @@ es la que permitirá migrar a SQLite y luego a PostgreSQL sin reescribir la apli
 |---|---|
 | D-01 | Indicador de mezcla de producto: el Excel actual no trae detalle de producto |
 | D-02 | Cuántos meses de histórico se pueden conseguir |
-| D-03 | Archivo Excel de ejemplo en `docs/ejemplos/` |
+| D-03 | **Resuelta a medias:** llegó el maestro real de clientes; falta el reporte de ventas por cliente y mes |
+| D-04 | Si el reporte de cuentas por cobrar se convierte en un módulo de cartera |
 
 ## Registro de decisiones de arquitectura
 
@@ -54,3 +56,4 @@ Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
 | 4 · Ficha del cliente | **Terminado** (28-ago-2026) | Preparar una visita con toda la información en pantalla |
 | 5 · Reportes imprimibles | **Terminado** (28-ago-2026) | El informe del mes, impreso y presentable |
 | 6 · Respaldo y confianza | **Terminado** (28-ago-2026) | Los datos se pueden sacar del navegador y volver a entrar |
+| 7 · Datos reales y geografía | **Terminado** (28-ago-2026) | El maestro real cargado, municipios de toda Colombia y zonas propias |

@@ -1,3 +1,4 @@
+import { etiquetaMunicipio } from '@/domain/geografia/geografia'
 import type { ClienteEnriquecido, NotaCliente } from '@/domain/cliente/cliente.entity'
 import type { VentaMensual } from '@/domain/venta/venta.entity'
 import { formatearPeriodo } from '@/domain/shared/periodo'
@@ -44,11 +45,11 @@ export function FichaImprimible({ cliente, ventas, notas, periodo }: Props) {
         </h2>
         <div className="grid grid-cols-2 gap-x-8 gap-y-1">
           <Dato etiqueta="Nombre comercial" valor={cliente.nombreComercial} />
-          <Dato etiqueta="NIT" valor={cliente.nit} />
+          <Dato etiqueta="Identificación" valor={cliente.identificacion} />
           <Dato etiqueta="Contacto" valor={cliente.contactoPrincipal} />
           <Dato etiqueta="Teléfono" valor={cliente.telefono} />
           <Dato etiqueta="Correo" valor={cliente.email} />
-          <Dato etiqueta="Ciudad" valor={cliente.ciudad} />
+          <Dato etiqueta="Municipio" valor={etiquetaMunicipio(cliente.municipio)} />
           <Dato etiqueta="Dirección" valor={cliente.direccion} />
         </div>
       </section>

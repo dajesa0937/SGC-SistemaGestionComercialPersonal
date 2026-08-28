@@ -1,5 +1,6 @@
 import type { Cliente, ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
 import type { ConfiguracionNegocio } from '@/domain/config/configuracion.entity'
+import type { Zona } from '@/domain/geografia/zona.entity'
 import type { Presupuesto } from '@/domain/presupuesto/presupuesto.entity'
 import type { Periodo } from '@/domain/shared/types'
 import type { VentaMensual } from '@/domain/venta/venta.entity'
@@ -30,6 +31,7 @@ export interface EntradaResumen {
   readonly ventas: readonly VentaMensual[]
   readonly presupuestos: readonly Presupuesto[]
   readonly config: ConfiguracionNegocio
+  readonly zonas?: readonly Zona[]
   /** Se inyecta para que el resumen sea determinista y comprobable. */
   readonly hoy: Date
 }
@@ -59,11 +61,11 @@ export interface ResumenDelPeriodo {
  * navegador y validar que coinciden con el archivo de origen.
  */
 export function resumenDelPeriodo(entrada: EntradaResumen): ResumenDelPeriodo {
-  const { periodo, clientes, ventas, presupuestos, config, hoy } = entrada
+  const { periodo, clientes, ventas, presupuestos, config, zonas, hoy } = entrada
 
   const mes = calcularCumplimiento(ventas, presupuestos, periodo)
   const anio = calcularAcumuladoAnual(ventas, presupuestos, periodo)
-  const enriquecidos = enriquecerClientes(clientes, ventas, periodo, config)
+  const enriquecidos = enriquecerClientes(clientes, ventas, periodo, config, zonas)
 
   return {
     periodo,
