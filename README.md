@@ -2,9 +2,10 @@
 
 Sistema de Gestión Comercial Personal — PWA para administrar un territorio comercial.
 
-> **Estado:** Sprints 0, 1, 3, 4 y 5 terminados. La aplicación administra la cartera con ficha 360
-> por cliente, guarda el presupuesto anual, registra ventas, muestra el panel de cumplimiento y
-> genera informes imprimibles. Faltan el importador de Excel (Sprint 2) y el respaldo (Sprint 6).
+> **Estado:** Sprints 0, 1, 3, 4, 5 y 6 terminados. La aplicación administra la cartera con ficha 360
+> por cliente, guarda el presupuesto anual, registra ventas, muestra el panel de cumplimiento, genera
+> informes imprimibles y respalda y restaura toda la base en un archivo. Solo falta el importador de
+> Excel (Sprint 2), a la espera de un archivo de ventas real.
 
 ## Puesta en marcha
 
@@ -56,5 +57,9 @@ requerimientos, casos de uso, historias, modelo de datos, UX, roadmap, backlog, 
 ## Advertencia sobre los datos
 
 Los datos viven en IndexedDB, dentro de este navegador. Limpiar los datos del sitio, cambiar de
-navegador o reinstalar el sistema **los borra sin aviso**. El respaldo descargable llega en el
-Sprint 6; hasta entonces la aplicación no debe ser la única copia de nada importante.
+navegador o reinstalar el sistema **los borra sin aviso**.
+
+Por eso existe *Configuración → Respaldo*: descarga un archivo `.json` con absolutamente todo y
+guárdalo fuera de este equipo. La aplicación avisa sola cuando pasan quince días sin respaldar, y ese
+aviso no se puede descartar a propósito. Restaurar reemplaza todos los datos actuales, y el archivo
+se revisa entero antes de tocar nada.

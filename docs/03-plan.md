@@ -215,18 +215,23 @@ de 5 segundos. **A partir de aquí la herramienta ya se usa a diario.**
 
 ---
 
-### Sprint 6 · Confianza y pulido
+### Sprint 6 · Confianza y pulido — **terminado** (28-ago-2026)
 **Objetivo:** poder depender de la herramienta sin miedo.
 
-- Exportación y restauración de respaldo completo
-- `navigator.storage.persist()` y aviso de respaldo pendiente
-- Historial de importaciones y reversión de la última
-- Revisión de accesibilidad (teclado y contraste)
-- Revisión de rendimiento y tamaño del paquete
-- Refactorización de la deuda acumulada en 6 sprints
-- Manual breve de uso en `docs/`
+- Exportación y restauración de respaldo completo ✔
+- `navigator.storage.persist()` y aviso de respaldo pendiente ✔
+- Borrado total («empezar de cero») con confirmación en dos pasos ✔
+- Revisión de accesibilidad (teclado y contraste) ✔
+- Revisión de rendimiento y tamaño del paquete ✔
+- Refactorización de la deuda acumulada en 6 sprints ✔
+- Manual breve de uso en `docs/04-manual.md` ✔
 
-**Entregable demostrable:** MVP terminado según los criterios de §2.
+El **historial de importaciones y la reversión de la última** se movieron al Sprint 2: revertir una
+importación solo tiene sentido junto al importador que la produjo, y el Sprint 2 sigue esperando un
+archivo de ventas real (D-03).
+
+**Entregable demostrable:** el usuario descarga un archivo, borra toda la base, restaura el archivo y
+recupera exactamente los mismos indicadores.
 
 ---
 

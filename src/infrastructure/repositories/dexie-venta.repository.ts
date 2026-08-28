@@ -38,19 +38,21 @@ export class DexieVentaRepository implements VentaRepository {
     const instante = ahoraISO()
 
     await this.db.transaction('rw', this.db.ventas, async () => {
-      for (const venta of ventas) {
-        const existente = await this.db.ventas
-          .where('[clienteId+periodo]')
-          .equals([venta.clienteId, venta.periodo])
-          .first()
+      // Se cargan los periodos afectados de una sola vez y se indexan en
+      // memoria. La version anterior hacia una consulta por fila: con las 2.400
+      // filas de un historico de dos anos eso son 2.400 consultas, y era la
+      // deuda anotada en la revision del Sprint 1.
+      const periodos = [...new Set(ventas.map((v) => v.periodo))]
+      const existentes = await this.db.ventas.where('periodo').anyOf(periodos).toArray()
+      const porClave = new Map(existentes.map((v) => [`${v.clienteId}|${v.periodo}`, v.id]))
 
-        const fila: VentaMensual = {
-          ...venta,
-          id: existente?.id ?? nuevoId(),
-          actualizadoEn: instante,
-        }
-        await this.db.ventas.put(fila)
-      }
+      const filas: VentaMensual[] = ventas.map((venta) => ({
+        ...venta,
+        id: porClave.get(`${venta.clienteId}|${venta.periodo}`) ?? nuevoId(),
+        actualizadoEn: instante,
+      }))
+
+      await this.db.ventas.bulkPut(filas)
     })
   }
 

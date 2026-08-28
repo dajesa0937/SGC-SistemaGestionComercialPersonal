@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { Check, X } from 'lucide-react'
 import { EncabezadoPagina } from '@/presentation/components/shared/EncabezadoPagina'
 import { Tarjeta } from '@/presentation/components/shared/Tarjeta'
-import { ModuloPendiente } from '@/presentation/components/shared/ModuloPendiente'
 import { ConmutadorTema } from '@/presentation/components/shared/ConmutadorTema'
 import { UmbralesNegocio } from './UmbralesNegocio'
+import { Respaldo } from './Respaldo'
 import { useResumenBase } from '@/presentation/hooks/data/useResumenBase'
 import { formatearNumero } from '@/lib/formato'
 import { solicitarAlmacenamientoPersistente } from '@/lib/almacenamiento'
@@ -90,26 +90,7 @@ export default function PaginaConfiguracion() {
 
         <UmbralesNegocio />
 
-        <div className="rounded-panel border-l-2 border-alerta bg-alerta-suave px-5 py-4">
-          <p className="text-sm text-texto">
-            <strong className="font-medium">Los datos viven en este navegador.</strong> Limpiar los
-            datos del sitio, cambiar de navegador o reinstalar el sistema los borra sin aviso. El
-            respaldo descargable llega en el Sprint 6; hasta entonces la aplicación no debe ser la
-            única copia de nada importante.
-          </p>
-        </div>
-
-        <ModuloPendiente
-          sprint="Llega en el Sprint 6"
-          objetivo="Poder depender de la herramienta sin miedo a perder información."
-          incluye={[
-            'Exportar un respaldo completo en un archivo',
-            'Restaurar desde un respaldo',
-            'Aviso cuando pasen quince días sin respaldar',
-            'Historial de importaciones y reversión de la última',
-          ]}
-        />
-
+        <Respaldo />
       </div>
     </>
   )

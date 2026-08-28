@@ -4,6 +4,7 @@ import { BarraLateral } from '@/presentation/components/shared/BarraLateral'
 import { ConmutadorTema } from '@/presentation/components/shared/ConmutadorTema'
 import { SelectorPeriodo } from '@/presentation/components/shared/SelectorPeriodo'
 import { buscarSeccion } from '@/app/navegacion'
+import { AvisoRespaldo } from '@/presentation/components/shared/AvisoRespaldo'
 
 function Migas() {
   const { pathname } = useLocation()
@@ -49,6 +50,7 @@ export function LayoutPrincipal() {
 
         <main className="flex-1 overflow-y-auto px-6 py-6">
           <div className="mx-auto max-w-6xl">
+            <AvisoRespaldo />
             <Suspense fallback={<Cargando />}>
               <Outlet />
             </Suspense>
