@@ -18,6 +18,7 @@ import { Tarjeta } from '@/presentation/components/shared/Tarjeta'
 import { useResumen } from '@/presentation/hooks/data/useResumen'
 import { usePeriodoSeleccionado } from '@/presentation/hooks/ui/contexto-periodo'
 import { GraficaAnual } from './GraficaAnual'
+import { MezclaProducto } from './MezclaProducto'
 
 function Panel({ titulo, cantidad, children }: { titulo: string; cantidad?: number; children: React.ReactNode }) {
   return (
@@ -207,6 +208,21 @@ export default function PaginaPanel() {
             <p className="mt-0.5 text-xs text-suave">Transcurridos del mes</p>
           </Tarjeta>
         </div>
+
+        {resumen.hayDetalleProducto ? (
+          <div className="grid gap-3 lg:grid-cols-2">
+            <MezclaProducto
+              mezcla={resumen.mezclaPeriodo}
+              titulo="Mezcla del mes"
+              descripcion="Cuánto pesa cada línea en la venta del periodo"
+            />
+            <MezclaProducto
+              mezcla={resumen.mezclaAnio}
+              titulo="Mezcla del año"
+              descripcion="Acumulado del año hasta este mes"
+            />
+          </div>
+        ) : null}
 
         <div className="grid gap-3 lg:grid-cols-2">
           <Panel titulo="Requieren atención" cantidad={resumen.alertas.length}>

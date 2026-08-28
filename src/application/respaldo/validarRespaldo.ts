@@ -42,6 +42,20 @@ const venta = z.object({
   actualizadoEn: z.string(),
 })
 
+const movimiento = z.object({
+  id: z.string().min(1),
+  clienteId: z.string().min(1),
+  fecha: z.string(),
+  periodo,
+  categoria: z.string().optional(),
+  producto: z.string().optional(),
+  cantidad: z.number().optional(),
+  valorUnitario: z.number().optional(),
+  valor: z.number().finite(),
+  importacionId: z.string().optional(),
+  actualizadoEn: z.string(),
+})
+
 const mapeoColumnas = z.object({
   hoja: z.string(),
   filaEncabezado: z.number().int(),
@@ -51,6 +65,12 @@ const mapeoColumnas = z.object({
   colPeriodo: z.string().optional(),
   colUnidades: z.string().optional(),
   colZona: z.string().optional(),
+  colFecha: z.string().optional(),
+  colIdentificacion: z.string().optional(),
+  colMunicipio: z.string().optional(),
+  colCategoria: z.string().optional(),
+  colProducto: z.string().optional(),
+  colValorUnitario: z.string().optional(),
 })
 
 /**
@@ -71,6 +91,7 @@ const importacion = z.object({
   clientesCreados: z.number().int().nonnegative(),
   mapeo: mapeoColumnas,
   snapshotAnterior: z.array(venta),
+  snapshotMovimientos: z.array(movimiento).default([]),
   estado: z.enum(['aplicada', 'revertida']),
 })
 
@@ -92,6 +113,7 @@ const esquemaRespaldo = z.object({
       }),
     ),
     ventas: z.array(venta),
+    movimientos: z.array(movimiento).default([]),
     presupuestos: z.array(
       z.object({
         id: z.string(),

@@ -2,8 +2,8 @@
 
 Sistema de Gestión Comercial Personal · Ejecutivo Comercial, Equipos Supra S.A.S.
 
-> **Estado del proyecto:** Sprints 0, 1, 3, 4, 5 y 6 terminados. Del MVP solo falta el importador de
-> Excel (Sprint 2), que espera un archivo de ventas real (decisión D-03).
+> **Estado del proyecto:** MVP terminado. Los siete sprints están cerrados, incluido el importador
+> de ventas, verificado contra el archivo real de la empresa.
 
 ## Documentos
 
@@ -36,9 +36,9 @@ es la que permitirá migrar a SQLite y luego a PostgreSQL sin reescribir la apli
 
 | ID | Decisión |
 |---|---|
-| D-01 | Indicador de mezcla de producto: el Excel actual no trae detalle de producto |
-| D-02 | Cuántos meses de histórico se pueden conseguir |
-| D-03 | **Resuelta a medias:** llegó el maestro real de clientes; falta el reporte de ventas por cliente y mes |
+| D-01 | **Resuelta.** El archivo de ventas sí trae categoría y producto: la mezcla se calcula y está en el panel |
+| D-02 | **Resuelta a medias.** Hay ocho meses de histórico: comparativo mes a mes sí, interanual todavía no |
+| D-03 | **Resuelta.** Llegaron el maestro de clientes y el archivo de ventas; los dos se importan y están verificados |
 | D-04 | Si el reporte de cuentas por cobrar se convierte en un módulo de cartera |
 
 ## Registro de decisiones de arquitectura
@@ -51,9 +51,12 @@ Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
 |---|---|---|
 | 0 · Fundación | **Terminado** (26-ago-2026) | Aplicación instalable, navegable, con tema claro/oscuro y funcionamiento sin conexión |
 | 1 · Maestro de clientes | **Terminado** (26-ago-2026) | Cartera completa cargada, consultable e importable desde Excel |
-| 2 · Importación de ventas | Siguiente · **bloqueado por D-03** | El Excel del mes entra completo y correcto |
+| 2 · Importación de ventas | **Terminado** (28-ago-2026) | El Excel del mes entra completo y correcto, con detalle de producto |
 | 3 · Presupuesto e indicadores | **Terminado** (28-ago-2026) | **Primer valor real:** la situación comercial en menos de 5 segundos |
 | 4 · Ficha del cliente | **Terminado** (28-ago-2026) | Preparar una visita con toda la información en pantalla |
 | 5 · Reportes imprimibles | **Terminado** (28-ago-2026) | El informe del mes, impreso y presentable |
 | 6 · Respaldo y confianza | **Terminado** (28-ago-2026) | Los datos se pueden sacar del navegador y volver a entrar |
 | 7 · Datos reales y geografía | **Terminado** (28-ago-2026) | El maestro real cargado, municipios de toda Colombia y zonas propias |
+
+**MVP terminado el 28 de agosto de 2026**, con los datos reales dentro y cada cifra contrastada
+contra su archivo de origen.

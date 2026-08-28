@@ -48,6 +48,7 @@ const CONTENIDO = {
   presupuestos: [
     { id: 'p1', periodo: '2026-08', meta: 50_000_000, actualizadoEn: '2026-08-01T00:00:00.000Z' },
   ],
+  movimientos: [],
   importaciones: [],
   zonas: [],
   configuracion: [{ clave: 'negocio', valor: { mesesParaInactivo: 3 } }],

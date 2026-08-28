@@ -1,5 +1,6 @@
 import type { AliasCliente, Cliente, NotaCliente } from '../cliente/cliente.entity'
 import type { VentaMensual } from '../venta/venta.entity'
+import type { MovimientoVenta } from '../venta/movimiento.entity'
 import type { Presupuesto } from '../presupuesto/presupuesto.entity'
 import type { Importacion } from '../importacion/importacion.entity'
 import type { Zona } from '../geografia/zona.entity'
@@ -11,13 +12,14 @@ import type { InstanteISO } from '../shared/types'
  * Se incrementa solo si un cambio del modelo hace ilegibles los archivos
  * anteriores. Un respaldo que no se puede restaurar no es un respaldo.
  */
-export const VERSION_RESPALDO = 2
+export const VERSION_RESPALDO = 3
 
 export interface ContenidoRespaldo {
   readonly clientes: readonly Cliente[]
   readonly aliases: readonly AliasCliente[]
   readonly notas: readonly NotaCliente[]
   readonly ventas: readonly VentaMensual[]
+  readonly movimientos: readonly MovimientoVenta[]
   readonly presupuestos: readonly Presupuesto[]
   readonly importaciones: readonly Importacion[]
   readonly zonas: readonly Zona[]

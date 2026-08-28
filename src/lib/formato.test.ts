@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  formatearFecha,
   formatearPesos,
   formatearPesosCorto,
   formatearPorcentaje,
@@ -82,5 +83,24 @@ describe('normalizarParaConciliar', () => {
     expect(normalizarParaConciliar('Maquinaria Tolima')).not.toBe(
       normalizarParaConciliar('Maquinaria Huila'),
     )
+  })
+})
+
+describe('formatearFecha con marcas de tiempo', () => {
+  it('formatea una fecha simple sin desplazarla de día', () => {
+    expect(formatearFecha('2026-08-28')).toBe('28 de agosto de 2026')
+  })
+
+  it('formatea una marca de tiempo completa en vez de devolverla cruda', () => {
+    // El historial de importaciones guarda instantes ISO, no fechas sueltas:
+    // antes se mostraba «2026-08-28T19:44:01.816Z» tal cual en pantalla.
+    const formateada = formatearFecha('2026-08-28T19:44:01.816Z')
+    expect(formateada).not.toContain('T')
+    expect(formateada).toContain('2026')
+  })
+
+  it('devuelve el texto original si no es una fecha', () => {
+    expect(formatearFecha('pendiente')).toBe('pendiente')
+    expect(formatearFecha('no-es-T-fecha')).toBe('no-es-T-fecha')
   })
 })

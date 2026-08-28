@@ -11,6 +11,7 @@ export class DexieRespaldoRepository implements RespaldoRepository {
       this.db.aliases,
       this.db.notas,
       this.db.ventas,
+      this.db.movimientos,
       this.db.presupuestos,
       this.db.importaciones,
       this.db.zonas,
@@ -19,19 +20,20 @@ export class DexieRespaldoRepository implements RespaldoRepository {
   }
 
   async exportar(): Promise<ContenidoRespaldo> {
-    const [clientes, aliases, notas, ventas, presupuestos, importaciones, zonas, configuracion] =
+    const [clientes, aliases, notas, ventas, movimientos, presupuestos, importaciones, zonas, configuracion] =
       await Promise.all([
         this.db.clientes.toArray(),
         this.db.aliases.toArray(),
         this.db.notas.toArray(),
         this.db.ventas.toArray(),
+        this.db.movimientos.toArray(),
         this.db.presupuestos.toArray(),
         this.db.importaciones.toArray(),
         this.db.zonas.toArray(),
         this.db.configuracion.toArray(),
       ])
 
-    return { clientes, aliases, notas, ventas, presupuestos, importaciones, zonas, configuracion }
+    return { clientes, aliases, notas, ventas, movimientos, presupuestos, importaciones, zonas, configuracion }
   }
 
   /**
@@ -49,6 +51,7 @@ export class DexieRespaldoRepository implements RespaldoRepository {
       await this.db.aliases.bulkAdd([...contenido.aliases])
       await this.db.notas.bulkAdd([...contenido.notas])
       await this.db.ventas.bulkAdd([...contenido.ventas])
+      await this.db.movimientos.bulkAdd([...contenido.movimientos])
       await this.db.presupuestos.bulkAdd([...contenido.presupuestos])
       await this.db.importaciones.bulkAdd([...contenido.importaciones])
       await this.db.zonas.bulkAdd([...contenido.zonas])

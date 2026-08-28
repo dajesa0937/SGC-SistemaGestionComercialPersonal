@@ -5,6 +5,7 @@ import { normalizarIdentificacion } from '@/domain/cliente/identificacion'
 import type { Zona } from '@/domain/geografia/zona.entity'
 import { municipioPorNombre, normalizarCodigoMunicipio } from '@/domain/geografia/geografia'
 import type { VentaMensual } from '@/domain/venta/venta.entity'
+import type { MovimientoVenta } from '@/domain/venta/movimiento.entity'
 import type { Presupuesto } from '@/domain/presupuesto/presupuesto.entity'
 import type { Importacion } from '@/domain/importacion/importacion.entity'
 
@@ -19,6 +20,7 @@ export type BaseSGC = Dexie & {
   aliases: EntityTable<AliasCliente, 'id'>
   notas: EntityTable<NotaCliente, 'id'>
   ventas: EntityTable<VentaMensual, 'id'>
+  movimientos: EntityTable<MovimientoVenta, 'id'>
   presupuestos: EntityTable<Presupuesto, 'id'>
   importaciones: EntityTable<Importacion, 'id'>
   zonas: EntityTable<Zona, 'id'>
@@ -101,4 +103,11 @@ export function aplicarEsquema(db: Dexie): void {
       }))
       if (nuevas.length > 0) await tx.table('zonas').bulkAdd(nuevas)
     })
+
+  // El archivo de ventas real resulto venir linea a linea, con producto y
+  // cantidad. Los movimientos son ese grano fino; el total mensual se deriva.
+  // No hay migracion de datos: la tabla nace vacia y se llena al importar.
+  db.version(3).stores({
+    movimientos: 'id, clienteId, periodo, fecha, categoria, producto, [clienteId+periodo]',
+  })
 }

@@ -77,6 +77,49 @@ describe('migrarRespaldo', () => {
   })
 })
 
+describe('un respaldo v2, sin movimientos, se acepta y se completa', () => {
+  const V2 = {
+    ...RESPALDO_V1,
+    version: 2,
+    datos: {
+      ...RESPALDO_V1.datos,
+      clientes: [
+        {
+          id: 'c9',
+          codigo: 'C-009',
+          nombre: 'Cliente ya migrado',
+          identificacion: '901265633',
+          municipio: '13670',
+          estadoManual: 'cliente',
+          archivado: false,
+          creadoEn: '2026-01-01T00:00:00.000Z',
+          actualizadoEn: '2026-01-01T00:00:00.000Z',
+        },
+      ],
+      zonas: [
+        {
+          id: 'z1',
+          nombre: 'Sabanas',
+          municipios: ['70713'],
+          creadoEn: '2026-01-01T00:00:00.000Z',
+          actualizadoEn: '2026-01-01T00:00:00.000Z',
+        },
+      ],
+    },
+  }
+
+  it('no pierde lo ya migrado ni inventa movimientos', () => {
+    const r = validarRespaldo(JSON.stringify(V2))
+    expect(r.valido).toBe(true)
+    if (!r.valido) return
+    expect(r.respaldo.version).toBe(VERSION_RESPALDO)
+    expect(r.respaldo.datos.clientes[0]?.identificacion).toBe('901265633')
+    expect(r.respaldo.datos.clientes[0]?.municipio).toBe('13670')
+    expect(r.respaldo.datos.zonas.map((z) => z.nombre)).toEqual(['Sabanas'])
+    expect(r.respaldo.datos.movimientos).toEqual([])
+  })
+})
+
 describe('validarRespaldo con un archivo de la versión anterior', () => {
   it('lo acepta y lo entrega ya migrado', () => {
     // Es la garantía de que el respaldo descargado ayer sigue sirviendo hoy.

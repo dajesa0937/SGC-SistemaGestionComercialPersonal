@@ -1,5 +1,6 @@
 import type { ClienteRepository } from './cliente/cliente.repository'
 import type { VentaRepository } from './venta/venta.repository'
+import type { MovimientoRepository } from './venta/movimiento.repository'
 import type { PresupuestoRepository } from './presupuesto/presupuesto.repository'
 import type { ImportacionRepository } from './importacion/importacion.repository'
 import type { ConfiguracionRepository } from './config/configuracion.repository'
@@ -17,6 +18,7 @@ import type { ZonaRepository } from './geografia/zona.repository'
 export interface Repositorios {
   readonly clientes: ClienteRepository
   readonly ventas: VentaRepository
+  readonly movimientos: MovimientoRepository
   readonly presupuestos: PresupuestoRepository
   readonly importaciones: ImportacionRepository
   readonly zonas: ZonaRepository

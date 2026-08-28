@@ -150,19 +150,25 @@ afinan después.
 
 ---
 
-### Sprint 2 · Importación de ventas
+### Sprint 2 · Importación de ventas — **terminado** (28-ago-2026)
 **Objetivo:** que los datos de ventas entren a la aplicación.
 
-- `infrastructure/excel/lector-excel.ts` encapsulando SheetJS
-- Detección de hojas y heurística de propuesta de mapeo
-- Asistente de 3 pasos (§10.6)
-- `analizarArchivo.ts`: produce la vista previa **sin escribir nada**
-- Conciliación en cascada: código → alias → nombre normalizado
-- Resolución manual de no reconocidos, creando alias
-- `aplicarImportacion.ts` transaccional e idempotente
-- Persistencia del último mapeo usado
+- Lector de archivos tabulares con `read-excel-file` (ADR 0003, no SheetJS) ✔
+- Detección de hojas y de columnas por encabezado, nunca por posición ✔
+- Asistente de 3 pasos: archivo, mapeo y revisión ✔
+- `analizarVentas.ts`: produce la vista previa **sin escribir nada** ✔
+- Conciliación en cascada: identificación → nombre normalizado ✔
+- Los clientes que el archivo trae y la base no tiene se crean, contados en la vista previa ✔
+- `aplicarVentas.ts`: reemplaza los periodos del archivo, así que reimportar corrige y no duplica ✔
+- Historial de importaciones con reversión de la última ✔
 
-**Entregable demostrable:** el Excel real del mes entra completo y correcto a la aplicación.
+**Cambio de alcance respecto al diseño.** El archivo real resultó venir **línea a línea**, con
+categoría, producto, cantidad y valor unitario, y no agregado por cliente y mes como se había
+descrito. El importador acepta las dos formas y decide por lo que encuentre. La mezcla de producto
+—la decisión D-01, que estaba marcada como imposible— pasó a ser calculable. Ver ADR 0008.
+
+**Entregable demostrable:** el Excel real del mes entra completo y correcto: 119 líneas,
+$ 239.572.000, los ocho meses coincidiendo peso a peso con el archivo de origen.
 
 **Riesgo del sprint:** es el sprint más difícil del proyecto. Si se desborda, se recorta la heurística
 de detección automática de columnas (el usuario mapea a mano) antes que la vista previa. **La vista

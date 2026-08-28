@@ -69,7 +69,7 @@ cumplimiento del territorio y qué clientes están detrás del resultado.*
 | Rutas, mapas, geolocalización | Fase 3 | Es la parte más costosa de construir y la que menos dolor quita hoy. El uso es en PC, no en calle. |
 | Agenda y visitas | Fase 2 | Valioso, pero depende de tener el maestro de clientes ya sólido. |
 | Oportunidades y pipeline | Fase 2 | Requiere que primero exista el hábito de usar la app a diario. |
-| Mezcla de producto | Bloqueado | **El Excel actual no trae detalle de producto.** Ver decisión pendiente D-01. |
+| Mezcla de producto | **Disponible** | El archivo de ventas trae categoría y producto. Se calcula la participación de cada línea en el mes y en el año. Resuelta D-01. |
 | Sincronización entre dispositivos | Fase 4 | Multiplica la complejidad por tres. La arquitectura queda preparada, no construida. |
 | Multiusuario / CRM comercial | Fase 5 | Es otro producto. Se llega si el personal demuestra valor. |
 
@@ -410,7 +410,7 @@ Quiero abrirla como un programa del computador, no como una pestaña más del na
 
 | ID | Decisión | Por qué bloquea | Opciones |
 |---|---|---|---|
-| **D-01** | **Indicador "mezcla de producto"** | El Excel llega agregado por cliente y mes, sin detalle de producto. El indicador es matemáticamente imposible con los datos actuales. | **a)** Pedir a la empresa el reporte con línea de producto → mejor opción, cambia el modelo de datos (venta pasa a grano cliente × periodo × línea). **b)** Registrar manualmente la línea de cada venta → más trabajo diario, datos parciales. **c)** Dejarlo fuera del MVP y revisarlo en fase 2 → recomendada si conseguir el reporte tarda. |
-| **D-02** | Profundidad del histórico inicial | "Clientes nuevos" y las comparaciones interanuales requieren histórico. Con 12 meses hay comparativo mes a mes; con 24 hay comparativo interanual. | Confirmar cuántos meses de histórico se pueden conseguir. |
-| **D-03** | Estructura real del archivo Excel | El importador se diseña contra un formato concreto. | **Resuelta a medias el 28-ago-2026.** Llegaron dos archivos reales: el **maestro de clientes** (62 clientes, con identificación, dirección, código DANE de municipio y teléfono) y un reporte de **cuentas por cobrar** (62 documentos, 32 clientes). El maestro ya está soportado y verificado. **Sigue faltando el reporte de ventas por cliente y mes**, que es lo que necesita el importador del Sprint 2. |
+| **D-01** | Indicador «mezcla de producto» | **Resuelta el 28-ago-2026.** El archivo real de ventas sí trae categoría y producto, así que el indicador dejó de ser imposible: se calcula y está en el panel. Con los datos actuales: Motores 32,0 %, Motosierras 25,3 %, Guadañadoras 21,2 %, Motobombas 20,0 %, Repuestos 1,6 %. Ver ADR 0008. |
+| **D-02** | Profundidad del histórico inicial | **Resuelta a medias.** El archivo trae ocho meses (enero a agosto de 2026). Alcanza para comparar contra el mes anterior; para el comparativo interanual faltan dieciséis meses más. |
+| **D-03** | Estructura real del archivo Excel | **Resuelta el 28-ago-2026.** Llegaron el maestro de clientes (62 clientes) y el archivo de ventas (119 líneas, 8 meses, $ 239.572.000). Los dos se importan solos y están verificados contra su origen. Advertencia registrada: el archivo de ventas entregado parece generado y no exportado del sistema —62 clientes que coinciden exactamente con el maestro, un solo precio por producto y ningún cliente sin compras—, así que las cifras son reales para ese archivo, no para el territorio. |
 | **D-04** | Módulo de cartera | El reporte de cuentas por cobrar es un archivo mensual, limpio y con dolor real detrás: $ 100,5 M vencidos, el 45,5 % de la cartera. No estaba en el alcance del MVP. | **a)** Módulo de cartera propio con cortes comparables en el tiempo → recomendada, los datos existen y el reporte llega solo. **b)** Solo usarlo para completar el maestro → desaprovecha el 90 % del archivo. **c)** Aplazar a fase 2 → el vencido no espera. |

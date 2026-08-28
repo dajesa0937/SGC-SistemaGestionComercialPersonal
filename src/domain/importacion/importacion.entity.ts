@@ -1,5 +1,6 @@
 import type { Id, InstanteISO, Periodo } from '../shared/types'
 import type { VentaMensual } from '../venta/venta.entity'
+import type { MovimientoVenta } from '../venta/movimiento.entity'
 
 /**
  * Correspondencia entre las columnas del archivo y los campos del sistema.
@@ -16,6 +17,13 @@ export interface MapeoColumnas {
   colPeriodo?: string
   colUnidades?: string
   colZona?: string
+  /** Columnas del archivo detallado, una fila por linea de factura. */
+  colFecha?: string
+  colIdentificacion?: string
+  colMunicipio?: string
+  colCategoria?: string
+  colProducto?: string
+  colValorUnitario?: string
 }
 
 /** Registro de una importacion aplicada, con la informacion necesaria para revertirla. */
@@ -29,8 +37,15 @@ export interface Importacion {
   filasConError: number
   clientesCreados: number
   mapeo: MapeoColumnas
-  /** Estado previo de las ventas afectadas. Red de seguridad para deshacer. */
+  /**
+   * Estado previo de los periodos afectados. Red de seguridad para deshacer.
+   *
+   * Se guardan los DOS granos. Guardar solo los totales dejaba, al deshacer,
+   * meses con cifra de venta y sin ninguna linea detras: el cumplimiento seguia
+   * saliendo y la mezcla de producto desaparecia. Dos verdades que no encajan.
+   */
   snapshotAnterior: VentaMensual[]
+  snapshotMovimientos?: MovimientoVenta[]
   estado: 'aplicada' | 'revertida'
 }
 

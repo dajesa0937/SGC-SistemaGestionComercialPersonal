@@ -2,10 +2,10 @@
 
 Sistema de Gestión Comercial Personal — PWA para administrar un territorio comercial.
 
-> **Estado:** Sprints 0, 1, 3, 4, 5, 6 y 7 terminados. La aplicación administra la cartera con ficha 360
-> por cliente, guarda el presupuesto anual, registra ventas, muestra el panel de cumplimiento, genera
-> informes imprimibles y respalda y restaura toda la base en un archivo. Solo falta el importador de
-> Excel de **ventas** (Sprint 2), a la espera de un archivo real: el maestro de clientes ya se importa.
+> **Estado: MVP terminado.** La aplicación importa el maestro de clientes y el Excel de ventas del
+> mes, administra la cartera con ficha 360 por cliente, guarda el presupuesto anual, muestra el panel
+> de cumplimiento con la mezcla de producto, genera informes imprimibles y respalda y restaura toda
+> la base en un archivo.
 >
 > La cartera se administra por **municipio DANE** (los 1.122 del país) y por **zonas que tú defines**.
 

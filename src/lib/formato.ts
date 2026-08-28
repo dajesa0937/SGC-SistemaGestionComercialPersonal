@@ -52,9 +52,25 @@ export function formatearNumero(valor: number): string {
 
 /** `2026-08-27` -> `27 de agosto de 2026`. */
 export function formatearFecha(fechaISO: string): string {
+  // Una marca de tiempo completa esta en UTC: hay que convertirla a hora local
+  // antes de quedarse con el dia. Cortar los diez primeros caracteres mostraria
+  // el 28 para algo ocurrido el 27 a las nueve de la noche en Colombia.
+  if (fechaISO.includes('T')) {
+    const instante = new Date(fechaISO)
+    if (Number.isNaN(instante.getTime())) return fechaISO
+    return new Intl.DateTimeFormat('es-CO', { dateStyle: 'long' }).format(instante)
+  }
+
   const [anio, mes, dia] = fechaISO.split('-').map(Number)
   if (!anio || !mes || !dia) return fechaISO
   return new Intl.DateTimeFormat('es-CO', { dateStyle: 'long' }).format(new Date(anio, mes - 1, dia))
+}
+
+/** Fecha y hora de una marca de tiempo, en hora local. */
+export function formatearInstante(instanteISO: string): string {
+  const instante = new Date(instanteISO)
+  if (Number.isNaN(instante.getTime())) return instanteISO
+  return new Intl.DateTimeFormat('es-CO', { dateStyle: 'long', timeStyle: 'short' }).format(instante)
 }
 
 /**
