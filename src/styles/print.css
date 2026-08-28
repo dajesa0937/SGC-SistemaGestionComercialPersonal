@@ -29,6 +29,22 @@
     display: none !important;
   }
 
+  /* Impresion de un documento concreto: cuando <html data-imprimiendo> esta
+     presente, la aplicacion desaparece y solo queda la hoja. */
+  html[data-imprimiendo] #root {
+    display: none !important;
+  }
+
+  html[data-imprimiendo] #hoja-impresion {
+    display: block !important;
+  }
+
+  html[data-imprimiendo] #hoja-impresion [role='dialog'],
+  html[data-imprimiendo] #hoja-impresion table,
+  html[data-imprimiendo] #hoja-impresion section {
+    display: revert !important;
+  }
+
   .solo-impresion {
     display: block !important;
   }
@@ -72,5 +88,10 @@
 }
 
 .solo-impresion {
+  display: none;
+}
+
+/* La hoja solo existe al imprimir: en pantalla nunca se ve. */
+#hoja-impresion {
   display: none;
 }

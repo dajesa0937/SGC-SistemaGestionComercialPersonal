@@ -125,3 +125,75 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   La hoja: el documento tal como saldrá impreso.
+
+   Se ve igual en la vista previa y en el papel porque es el mismo marcado. En
+   pantalla se pinta sobre blanco aunque el tema esté en oscuro: previsualizar
+   un documento en negro y luego imprimirlo en blanco es una sorpresa desagradable.
+--------------------------------------------------------------------------- */
+
+.hoja {
+  color: #16181a;
+  font-size: 11pt;
+  line-height: 1.45;
+}
+
+.hoja table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hoja th,
+.hoja td {
+  border-bottom: 1px solid #e2e5e7;
+  padding: 4px 6px 4px 0;
+  vertical-align: top;
+}
+
+.hoja th {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.hoja thead tr {
+  border-bottom: 1px solid #b9bfc4;
+}
+
+.hoja .text-texto,
+.hoja h1,
+.hoja h2 {
+  color: #16181a;
+}
+
+.hoja .text-suave {
+  color: #4d565e;
+}
+
+.hoja .text-tenue {
+  color: #767f87;
+}
+
+.hoja .border-borde,
+.hoja .border-borde-suave {
+  border-color: #ccd1d5;
+}
+
+/* Contenedor que simula una hoja carta en la vista previa. */
+.marco-hoja {
+  background: #ffffff;
+  width: 21.6cm;
+  max-width: 100%;
+  padding: 1.5cm;
+  border: 1px solid var(--sgc-borde);
+  border-radius: var(--radius-panel);
+}
+
+@media print {
+  .marco-hoja {
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { detectarSeparador, leerCsv } from './csv'
+import { aCsv, detectarSeparador, leerCsv } from './csv'
 
 describe('detectarSeparador', () => {
   it('detecta el punto y coma de los Excel en espanol', () => {
@@ -63,5 +63,40 @@ describe('leerCsv', () => {
 
   it('devuelve vacio con texto vacio', () => {
     expect(leerCsv('')).toEqual([])
+  })
+})
+
+describe('aCsv', () => {
+  it('usa punto y coma, que es lo que espera un Excel en español', () => {
+    expect(aCsv([['a', 'b'], [1, 2]])).toBe('a;b\r\n1;2')
+  })
+
+  it('entrecomilla solo las celdas que lo necesitan', () => {
+    expect(aCsv([['simple', 'con;separador']])).toBe('simple;"con;separador"')
+  })
+
+  it('duplica las comillas internas', () => {
+    expect(aCsv([['Dijo "hola"']])).toBe('"Dijo ""hola"""')
+  })
+
+  it('entrecomilla los saltos de línea dentro de una celda', () => {
+    expect(aCsv([['linea 1\nlinea 2']])).toBe('"linea 1\nlinea 2"')
+  })
+
+  it('los valores nulos quedan como celda vacía', () => {
+    expect(aCsv([['a', null, undefined, 'd']])).toBe('a;;;d')
+  })
+
+  it('lo que genera se puede volver a leer', () => {
+    const original = [
+      ['Cliente', 'Zona', 'Venta'],
+      ['Ferretería; El Tornillo', 'Ibagué', '20000000'],
+      ['Dijo "sí"', 'Espinal', '0'],
+    ]
+    expect(leerCsv(aCsv(original))).toEqual(original)
+  })
+
+  it('admite otro separador', () => {
+    expect(aCsv([['a', 'b']], ',')).toBe('a,b')
   })
 })

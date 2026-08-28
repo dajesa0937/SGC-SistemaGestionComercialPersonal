@@ -2,9 +2,9 @@
 
 Sistema de Gestión Comercial Personal — PWA para administrar un territorio comercial.
 
-> **Estado:** Sprints 0, 1, 3 y 4 terminados. La aplicación administra la cartera con ficha 360 por
-> cliente, guarda el presupuesto anual, registra ventas y muestra el panel de cumplimiento con
-> proyección de cierre. Faltan el importador de Excel (Sprint 2) y los reportes (Sprint 5).
+> **Estado:** Sprints 0, 1, 3, 4 y 5 terminados. La aplicación administra la cartera con ficha 360
+> por cliente, guarda el presupuesto anual, registra ventas, muestra el panel de cumplimiento y
+> genera informes imprimibles. Faltan el importador de Excel (Sprint 2) y el respaldo (Sprint 6).
 
 ## Puesta en marcha
 

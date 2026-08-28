@@ -189,7 +189,7 @@ export default function PaginaPanel() {
             </p>
           </Tarjeta>
           <Tarjeta className="px-4 py-3">
-            <p className="text-xs tracking-wider text-tenue uppercase">Clientes nuevos</p>
+            <p className="text-xs tracking-wider text-tenue uppercase">Nuevos este mes</p>
             <p className="cifra mt-1 text-lg font-semibold text-texto">
               {formatearNumero(resumen.nuevos.length)}
             </p>

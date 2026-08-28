@@ -86,3 +86,26 @@ export function leerCsv(texto: string, separador?: string): string[][] {
   // Una linea final vacia no es una fila.
   return filas.filter((f) => !(f.length === 1 && f[0] === ''))
 }
+
+/**
+ * Convierte una rejilla en texto CSV.
+ *
+ * Se entrecomilla solo lo que lo necesita —separador, comillas o saltos de
+ * linea dentro de la celda— porque un CSV entrecomillado entero es mas dificil
+ * de leer a ojo cuando algo sale mal.
+ *
+ * Se usa punto y coma como separador por defecto: es lo que espera un Excel
+ * configurado en espanol, y con coma abriria todo el archivo en una sola
+ * columna.
+ */
+export function aCsv(filas: readonly (readonly (string | number | null | undefined)[])[], separador = ';'): string {
+  return filas.map((fila) => fila.map((celda) => escapar(celda, separador)).join(separador)).join('\r\n')
+}
+
+function escapar(celda: string | number | null | undefined, separador: string): string {
+  if (celda === null || celda === undefined) return ''
+  const texto = String(celda)
+  const necesitaComillas =
+    texto.includes(separador) || texto.includes('"') || texto.includes('\n') || texto.includes('\r')
+  return necesitaComillas ? `"${texto.replace(/"/g, '""')}"` : texto
+}

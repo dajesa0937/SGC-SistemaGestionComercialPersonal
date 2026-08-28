@@ -1,16 +1,20 @@
 import { useMemo, useState } from 'react'
-import { FileUp, Plus, Printer, Users } from 'lucide-react'
+import { Download, FileUp, Plus, Printer, Users } from 'lucide-react'
 import type { ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
 import { hayFiltrosActivos } from '@/application/clientes/filtrarClientes'
 import { formatearPeriodoCorto } from '@/domain/shared/periodo'
 import { paginar } from '@/lib/paginacion'
 import { formatearPesos, formatearVariacion } from '@/lib/formato'
+import { aCsv } from '@/lib/csv'
+import { descargarCsv, nombreConFecha } from '@/lib/descargar'
 import { Badge } from '@/presentation/components/shared/Badge'
 import { Boton } from '@/presentation/components/shared/Boton'
 import { EncabezadoPagina } from '@/presentation/components/shared/EncabezadoPagina'
 import { EstadoVacio } from '@/presentation/components/shared/EstadoVacio'
 import { MiniGrafica } from '@/presentation/components/shared/MiniGrafica'
 import { TablaDatos, type ColumnaTabla } from '@/presentation/components/shared/TablaDatos'
+import { useHojaImpresion } from '@/presentation/components/shared/HojaImpresion'
+import { ListaImprimible } from '../reportes/ListaImprimible'
 import { useClientes } from '@/presentation/hooks/data/useClientes'
 import { useFiltrosClientes } from '@/presentation/hooks/ui/useFiltrosClientes'
 import { usePeriodoSeleccionado } from '@/presentation/hooks/ui/contexto-periodo'
@@ -31,9 +35,42 @@ export default function PaginaClientes() {
   const [editando, setEditando] = useState<ClienteEnriquecido | null>(null)
   const [formularioAbierto, setFormularioAbierto] = useState(false)
   const [importando, setImportando] = useState(false)
+  const { imprimir, portal } = useHojaImpresion()
 
   const paginaActual = useMemo(() => paginar(visibles, pagina, POR_PAGINA), [visibles, pagina])
   const conFiltros = hayFiltrosActivos(filtros)
+
+  // Se imprime y se exporta lo FILTRADO completo, no solo la página visible:
+  // quien filtró por "en riesgo" quiere las veintitrés filas, no las primeras
+  // veinticinco de la tabla.
+  const descripcionFiltros = [
+    filtros.texto ? `búsqueda "${filtros.texto}"` : null,
+    filtros.zona ? `zona ${filtros.zona}` : null,
+    filtros.estado ? `estado ${ETIQUETA_ESTADO[filtros.estado]}` : null,
+    filtros.clasificacion ? `clase ${filtros.clasificacion}` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+
+  const exportarCsv = () => {
+    const filas: (string | number)[][] = [
+      ['Codigo', 'Cliente', 'Zona', 'Ciudad', 'Telefono', 'Correo', 'ABC', 'Estado', 'Venta mes', 'Venta ano', 'Ultima compra'],
+      ...visibles.map((c) => [
+        c.codigo,
+        c.nombre,
+        c.zona ?? '',
+        c.ciudad ?? '',
+        c.telefono ?? '',
+        c.email ?? '',
+        ETIQUETA_ABC[c.clasificacion],
+        ETIQUETA_ESTADO[c.estado],
+        c.ventaPeriodo,
+        c.ventaAnio,
+        c.ultimaCompra ?? '',
+      ]),
+    ]
+    descargarCsv(nombreConFecha('clientes', 'csv'), aCsv(filas))
+  }
 
   const abrirNuevo = () => {
     setEditando(null)
@@ -147,6 +184,8 @@ export default function PaginaClientes() {
 
   return (
     <>
+      {portal}
+
       <EncabezadoPagina
         titulo="Clientes"
         descripcion={
@@ -154,7 +193,23 @@ export default function PaginaClientes() {
         }
         acciones={
           <>
-            <Boton onClick={() => window.print()} title="Imprimir la lista con los filtros actuales">
+            <Boton onClick={exportarCsv} disabled={visibles.length === 0} title="Exportar lo filtrado a CSV">
+              <Download className="size-4" aria-hidden="true" />
+              CSV
+            </Boton>
+            <Boton
+              disabled={visibles.length === 0}
+              title="Imprimir la lista con los filtros actuales"
+              onClick={() =>
+                imprimir(
+                  <ListaImprimible
+                    clientes={visibles}
+                    periodo={periodo}
+                    descripcionFiltros={descripcionFiltros || 'Sin filtros aplicados'}
+                  />,
+                )
+              }
+            >
               <Printer className="size-4" aria-hidden="true" />
               Imprimir
             </Boton>
@@ -169,17 +224,6 @@ export default function PaginaClientes() {
           </>
         }
       />
-
-      {/* Encabezado que solo aparece en papel, para que la hoja se explique sola. */}
-      <div className="solo-impresion mb-4">
-        <p className="text-sm">
-          Cartera de clientes · {paginaActual.totalItems} registros ·{' '}
-          {formatearPeriodoCorto(periodo)}
-          {filtros.zona ? ` · zona ${filtros.zona}` : ''}
-          {filtros.estado ? ` · estado ${ETIQUETA_ESTADO[filtros.estado]}` : ''}
-          {filtros.texto ? ` · búsqueda "${filtros.texto}"` : ''}
-        </p>
-      </div>
 
       <BarraFiltros
         filtros={filtros}

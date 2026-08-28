@@ -9,6 +9,8 @@ import { Badge } from '@/presentation/components/shared/Badge'
 import { Boton } from '@/presentation/components/shared/Boton'
 import { Entrada } from '@/presentation/components/shared/Campo'
 import { PanelLateral } from '@/presentation/components/shared/PanelLateral'
+import { useHojaImpresion } from '@/presentation/components/shared/HojaImpresion'
+import { FichaImprimible } from '../reportes/FichaImprimible'
 import { useNotas, useVentasCliente } from '@/presentation/hooks/data/useClientes'
 import { useRepositorios } from '@/presentation/hooks/data/contexto-repositorios'
 import { usePeriodoSeleccionado } from '@/presentation/hooks/ui/contexto-periodo'
@@ -104,6 +106,7 @@ export function FichaCliente({ cliente, onCerrar, onEditar }: Props) {
   const { mostrar } = useAvisos()
   const [pestana, setPestana] = useState<Pestana>('resumen')
   const [nuevaNota, setNuevaNota] = useState('')
+  const { imprimir, portal } = useHojaImpresion()
 
   const notas = useNotas(cliente?.id ?? null)
   const ventas = useVentasCliente(cliente?.id ?? null)
@@ -127,7 +130,9 @@ export function FichaCliente({ cliente, onCerrar, onEditar }: Props) {
   }
 
   return (
-    <PanelLateral
+    <>
+      {portal}
+      <PanelLateral
       abierto
       ancho="lg"
       titulo={cliente.nombre}
@@ -135,7 +140,20 @@ export function FichaCliente({ cliente, onCerrar, onEditar }: Props) {
       onCerrar={onCerrar}
       pie={
         <>
-          <Boton variante="fantasma" onClick={() => window.print()} className="mr-auto">
+          <Boton
+            variante="fantasma"
+            className="mr-auto"
+            onClick={() =>
+              imprimir(
+                <FichaImprimible
+                  cliente={cliente}
+                  ventas={ventas ?? []}
+                  notas={notas ?? []}
+                  periodo={periodo}
+                />,
+              )
+            }
+          >
             <Printer className="size-4" aria-hidden="true" />
             Imprimir ficha
           </Boton>
@@ -336,5 +354,6 @@ export function FichaCliente({ cliente, onCerrar, onEditar }: Props) {
         </div>
       ) : null}
     </PanelLateral>
+    </>
   )
 }
