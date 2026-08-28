@@ -11,6 +11,7 @@
     "iconos": "node scripts/generar-iconos.mjs",
     "inicio": "npm run build && vite preview --open",
     "lint": "eslint .",
+    "mapa": "node scripts/generar-mapa.mjs",
     "municipios": "node scripts/generar-municipios.mjs",
     "preview": "vite preview",
     "test": "vitest run",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@svg-maps/colombia": "^2.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",

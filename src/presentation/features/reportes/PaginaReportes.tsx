@@ -1,6 +1,6 @@
 import { etiquetaMunicipio } from '@/domain/geografia/geografia'
 import { useMemo, useState } from 'react'
-import { Download, FileText, Printer, User, Users } from 'lucide-react'
+import { Download, FileText, Map, Printer, User, Users } from 'lucide-react'
 import { formatearPeriodo, formatearPeriodoCorto } from '@/domain/shared/periodo'
 import { aCsv } from '@/lib/csv'
 import { descargarCsv, nombreConFecha } from '@/lib/descargar'
@@ -15,10 +15,12 @@ import { useResumen } from '@/presentation/hooks/data/useResumen'
 import { usePeriodoSeleccionado } from '@/presentation/hooks/ui/contexto-periodo'
 import { ETIQUETA_ABC, ETIQUETA_ESTADO } from '../clientes/etiquetas'
 import { FichaImprimible } from './FichaImprimible'
+import { calcularCoberturaTerritorial } from '@/application/indicadores/coberturaTerritorial'
 import { InformeMensual } from './InformeMensual'
+import { InformeTerritorial } from './InformeTerritorial'
 import { ListaImprimible } from './ListaImprimible'
 
-type Reporte = 'mensual' | 'cartera' | 'ficha'
+type Reporte = 'mensual' | 'territorio' | 'cartera' | 'ficha'
 
 const REPORTES: ReadonlyArray<{ clave: Reporte; titulo: string; descripcion: string; icono: typeof FileText }> = [
   {
@@ -26,6 +28,12 @@ const REPORTES: ReadonlyArray<{ clave: Reporte; titulo: string; descripcion: str
     titulo: 'Informe mensual de gestión',
     descripcion: 'Cumplimiento, proyección, cobertura, top de clientes y alertas.',
     icono: FileText,
+  },
+  {
+    clave: 'territorio',
+    titulo: 'Cobertura territorial',
+    descripcion: 'Mapa de Colombia con tus clientes por departamento, zona y municipio.',
+    icono: Map,
   },
   {
     clave: 'cartera',
@@ -54,6 +62,7 @@ export default function PaginaReportes() {
     [resumen],
   )
   const cliente = clientes.find((c) => c.id === clienteId)
+  const cobertura = useMemo(() => calcularCoberturaTerritorial(clientes), [clientes])
   const ventasCliente = useVentasCliente(cliente?.id ?? null)
   const notasCliente = useNotas(cliente?.id ?? null)
 
@@ -66,24 +75,20 @@ export default function PaginaReportes() {
     )
   }
 
-  if (resumen.sinDatos && reporte === 'mensual') {
-    return (
-      <>
-        <EncabezadoPagina titulo="Reportes" descripcion="Informes para imprimir o guardar en PDF." />
-        <EstadoVacio
-          icono={FileText}
-          titulo="Todavía no hay nada que reportar"
-          descripcion="El informe mensual se arma con las ventas del periodo. Regístralas y vuelve aquí."
-        />
-      </>
-    )
-  }
-
   const descripcionFiltros = `Todos los clientes activos · ${formatearPeriodoCorto(periodo)}`
 
+  // Sin ventas, el informe mensual no tiene nada que decir, pero los demás sí:
+  // la cobertura territorial y la cartera se sostienen solo con clientes. Antes
+  // el estado vacío tapaba la página entera y dejaba sin salida a quien tenía
+  // clientes cargados y todavía no había importado el primer mes.
+  const sinVentasParaMensual = resumen.sinDatos && reporte === 'mensual'
+
   const documento =
+    sinVentasParaMensual ? null :
     reporte === 'mensual' ? (
       <InformeMensual resumen={resumen} />
+    ) : reporte === 'territorio' ? (
+      <InformeTerritorial cobertura={cobertura} periodo={periodo} paraImprimir />
     ) : reporte === 'cartera' ? (
       <ListaImprimible
         clientes={clientes}
@@ -101,7 +106,14 @@ export default function PaginaReportes() {
 
   const exportarCsv = () => {
     const filas: (string | number)[][] =
-      reporte === 'mensual'
+      reporte === 'territorio'
+        ? [
+            ['Ambito', 'Territorio', 'Clientes', 'Compraron', 'Venta mes', 'Venta ano'],
+            ...cobertura.departamentos.map((d) => ['Departamento', d.nombre, d.clientes, d.conCompra, d.ventaPeriodo, d.ventaAnio]),
+            ...cobertura.zonas.map((z) => ['Zona', z.nombre, z.clientes, z.conCompra, z.ventaPeriodo, z.ventaAnio]),
+            ...cobertura.municipios.map((m) => ['Municipio', m.nombre, m.clientes, m.conCompra, m.ventaPeriodo, m.ventaAnio]),
+          ]
+        : reporte === 'mensual'
         ? [
             ['Mes', 'Vendido', 'Meta', 'Cumplimiento'],
             ...resumen.serie.map((p) => [
@@ -128,7 +140,14 @@ export default function PaginaReportes() {
           ]
 
     descargarCsv(
-      nombreConFecha(reporte === 'mensual' ? 'informe-mensual' : 'cartera-clientes', 'csv'),
+      nombreConFecha(
+        reporte === 'mensual'
+          ? 'informe-mensual'
+          : reporte === 'territorio'
+            ? 'cobertura-territorial'
+            : 'cartera-clientes',
+        'csv',
+      ),
       aCsv(filas),
     )
   }
@@ -158,7 +177,7 @@ export default function PaginaReportes() {
         }
       />
 
-      <div className="mb-5 grid gap-3 lg:grid-cols-3 no-imprimir">
+      <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 no-imprimir">
         {REPORTES.map((item) => {
           const Icono = item.icono
           const activo = reporte === item.clave
@@ -208,7 +227,13 @@ export default function PaginaReportes() {
         </div>
       ) : null}
 
-      {documento === null ? (
+      {sinVentasParaMensual ? (
+        <EstadoVacio
+          icono={FileText}
+          titulo="Todavía no hay ventas que reportar"
+          descripcion="El informe mensual se arma con las ventas del periodo. Importa el archivo del mes, o mira mientras tanto la cobertura territorial y la cartera, que solo necesitan clientes."
+        />
+      ) : documento === null ? (
         <EstadoVacio
           icono={User}
           titulo="Elige un cliente"

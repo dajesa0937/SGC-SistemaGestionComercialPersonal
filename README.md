@@ -4,8 +4,8 @@ Sistema de Gestión Comercial Personal — PWA para administrar un territorio co
 
 > **Estado: MVP terminado.** La aplicación importa el maestro de clientes y el Excel de ventas del
 > mes, administra la cartera con ficha 360 por cliente, guarda el presupuesto anual, muestra el panel
-> de cumplimiento con la mezcla de producto, genera informes imprimibles y respalda y restaura toda
-> la base en un archivo.
+> de cumplimiento con la mezcla de producto, dibuja la cobertura sobre el mapa de Colombia, genera
+> informes imprimibles y respalda y restaura toda la base en un archivo.
 >
 > La cartera se administra por **municipio DANE** (los 1.122 del país) y por **zonas que tú defines**.
 
@@ -62,6 +62,7 @@ La aplicación queda en `http://localhost:5173`.
 | `npm run iconos` | Regenera los iconos PNG de la PWA |
 | `npm run tildes` | Corrige las tildes de los textos visibles |
 | `npm run municipios` | Regenera el catálogo DANE de municipios |
+| `npm run mapa` | Regenera los trazados del mapa de departamentos |
 
 ## Arquitectura
 

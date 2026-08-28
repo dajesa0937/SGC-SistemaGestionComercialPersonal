@@ -80,11 +80,18 @@ lo que no se escribe se olvida.
 
 ### 6. Lleva el informe — *Reportes*
 
-Tres documentos, todos con **Imprimir o guardar en PDF**:
+Cuatro documentos, todos con **Imprimir o guardar en PDF**:
 
 - **Informe mensual de gestión** — cabe en una página, para reuniones de resultados.
+- **Cobertura territorial** — el mapa de Colombia con tus clientes por departamento, y el desglose
+  por zona y por municipio con venta y cobertura de cada uno.
 - **Cartera de clientes** — el listado con los filtros que tengas puestos.
 - **Ficha de cliente** — una hoja con todo, y espacio en blanco para escribir en la visita.
+
+> **Sobre el mapa.** Pinta departamentos, no puntos por municipio: las coordenadas de los 1.122
+> municipios del país no existen en ninguna fuente libre, y ponerlas a ojo sería un mapa que se ve
+> bien y miente. El detalle exacto de cada municipio está en la tabla, justo debajo. Un cliente sin
+> municipio asignado no aparece en el mapa y el informe te lo avisa.
 
 ---
 
