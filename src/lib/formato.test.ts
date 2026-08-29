@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  formatearDecimal,
   formatearFecha,
   formatearPesos,
   formatearPesosCorto,
@@ -102,5 +103,17 @@ describe('formatearFecha con marcas de tiempo', () => {
   it('devuelve el texto original si no es una fecha', () => {
     expect(formatearFecha('pendiente')).toBe('pendiente')
     expect(formatearFecha('no-es-T-fecha')).toBe('no-es-T-fecha')
+  })
+})
+
+describe('formatearDecimal', () => {
+  it('usa la coma decimal del español, no el punto', () => {
+    expect(formatearDecimal(1.01)).toBe('1,01')
+    expect(formatearDecimal(1.71)).toBe('1,71')
+  })
+
+  it('respeta los decimales pedidos', () => {
+    expect(formatearDecimal(2.5, 1)).toBe('2,5')
+    expect(formatearDecimal(2, 0)).toBe('2')
   })
 })

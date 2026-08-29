@@ -46,6 +46,14 @@ export function formatearVariacion(fraccion: number | null, decimales = 1): stri
 }
 
 /** Numero entero con separador de miles. */
+/** Numero con decimales, con la coma decimal del espanol. */
+export function formatearDecimal(valor: number, decimales = 2): string {
+  return new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: decimales,
+    maximumFractionDigits: decimales,
+  }).format(valor)
+}
+
 export function formatearNumero(valor: number): string {
   return ENTERO.format(valor)
 }

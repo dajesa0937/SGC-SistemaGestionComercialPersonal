@@ -7,12 +7,16 @@ import { calcularCrecimiento, proyectarClienteAlCierre } from '@/application/vis
 import type { PlanDeVisitas } from '@/application/visitas/planDeVisitas'
 import { construirPlanDeVisitas } from '@/application/visitas/planDeVisitas'
 import { agruparPorCliente } from './analizarCartera'
+import type { InformeGerencia } from './informeGerencia'
+import { construirInformeGerencia } from './informeGerencia'
+import type { PuenteDeVentas } from './puenteDeVentas'
+import { construirPuenteDeVentas } from './puenteDeVentas'
 import type { MovimientoVenta, ParticipacionMezcla } from '@/domain/venta/movimiento.entity'
 import { calcularMezcla } from '@/domain/venta/movimiento.entity'
 import type { Presupuesto } from '@/domain/presupuesto/presupuesto.entity'
 import type { Periodo } from '@/domain/shared/types'
 import type { VentaMensual } from '@/domain/venta/venta.entity'
-import { anioDe } from '@/domain/shared/periodo'
+import { anioDe, sumarMeses } from '@/domain/shared/periodo'
 import {
   calcularAcumuladoAnual,
   calcularCumplimiento,
@@ -73,6 +77,10 @@ export interface ResumenDelPeriodo {
   /** Tendencia y proyeccion de cada cliente, por su identificador. */
   readonly analisisPorCliente: ReadonlyMap<string, { crecimiento: Crecimiento; proyeccion: Proyeccion }>
   readonly plan: PlanDeVisitas
+  /** Indicadores que pide un informe de gerencia y el panel diario no muestra. */
+  readonly gerencia: InformeGerencia
+  /** De donde sale la variacion contra el mes anterior, tramo a tramo. */
+  readonly puente: PuenteDeVentas
   /** No hay ninguna venta registrada en toda la base. */
   readonly sinDatos: boolean
 }
@@ -133,6 +141,8 @@ export function resumenDelPeriodo(entrada: EntradaResumen): ResumenDelPeriodo {
     hayDetalleProducto: movimientos.length > 0,
     analisisPorCliente,
     plan: construirPlanDeVisitas(enriquecidos, notas, config, analisisPorCliente, hoy),
+    gerencia: construirInformeGerencia(enriquecidos, movimientos, notas, periodo),
+    puente: construirPuenteDeVentas(ventas, periodo, sumarMeses(periodo, -1)),
     sinDatos: ventas.length === 0,
   }
 }

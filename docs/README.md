@@ -59,6 +59,7 @@ Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
 | 7 · Datos reales y geografía | **Terminado** (28-ago-2026) | El maestro real cargado, municipios de toda Colombia y zonas propias |
 | 8 · Mapa de cobertura | **Terminado** (28-ago-2026) | Dónde está la cartera, de un vistazo y sobre el mapa del país |
 | 9 · Plan de visitas | **Terminado** (29-ago-2026) | A quién ver esta semana, por lo que vale y por cómo viene |
+| 10 · Informe de gerencia | **Terminado** (29-ago-2026) | Una hoja que explica de dónde viene la diferencia, no solo cuál es |
 
 **MVP terminado el 28 de agosto de 2026**, con los datos reales dentro y cada cifra contrastada
 contra su archivo de origen.

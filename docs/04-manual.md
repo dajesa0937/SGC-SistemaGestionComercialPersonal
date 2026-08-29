@@ -127,9 +127,14 @@ calle el orden lo manda la carretera — y cada cliente lleva una línea en blan
 
 ### 7. Lleva el informe — *Reportes*
 
-Cuatro documentos, todos con **Imprimir o guardar en PDF**:
+Cinco documentos, todos con **Imprimir o guardar en PDF**:
 
 - **Informe mensual de gestión** — cabe en una página, para reuniones de resultados.
+- **Informe de gerencia** — para llevar al jefe. Arriba el cumplimiento, y justo debajo el **puente
+  de ventas**: de dónde sale la diferencia contra el mes anterior, tramo a tramo — cuánto entró por
+  clientes nuevos, cuánto por los que volvieron, cuánto se perdió por los que se fueron. Debajo, los
+  indicadores que preguntan arriba: pedidos, ticket, venta cruzada, penetración por línea,
+  concentración y efectividad de visita.
 - **Cobertura territorial** — el mapa de Colombia con tus clientes por departamento, y el desglose
   por zona y por municipio con venta y cobertura de cada uno.
 - **Cartera de clientes** — el listado con los filtros que tengas puestos.
