@@ -7,7 +7,7 @@ echo   ===================================
 echo    SGC Personal
 echo   ===================================
 echo.
-if not exist "node_modules\" (
+if not exist "node_modules" (
   echo   Primera vez: instalando dependencias.
   echo   Tarda un par de minutos y solo pasa una vez.
   echo.
