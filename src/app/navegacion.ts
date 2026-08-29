@@ -1,4 +1,5 @@
 import {
+  CalendarCheck,
   FileUp,
   LayoutDashboard,
   Printer,
@@ -40,6 +41,12 @@ export const SECCIONES: readonly Seccion[] = [
     etiqueta: 'Ventas',
     descripcion: 'Registrar o importar las ventas del mes',
     icono: FileUp,
+  },
+  {
+    ruta: '/visitas',
+    etiqueta: 'Visitas',
+    descripcion: 'A quién ver esta semana y por qué',
+    icono: CalendarCheck,
   },
   {
     ruta: '/reportes',

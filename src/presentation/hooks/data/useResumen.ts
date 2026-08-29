@@ -16,15 +16,16 @@ export function useResumen(): ResumenDelPeriodo | undefined {
   const { periodo } = usePeriodoSeleccionado()
 
   const datos = useConsulta(async () => {
-    const [clientes, ventas, presupuestos, config, zonas, movimientos] = await Promise.all([
+    const [clientes, ventas, presupuestos, config, zonas, movimientos, notas] = await Promise.all([
       repositorios.clientes.listar({ incluirArchivados: true }),
       repositorios.ventas.listarTodas(),
       repositorios.presupuestos.listarTodos(),
       repositorios.configuracion.leerNegocio(),
       repositorios.zonas.listar(),
       repositorios.movimientos.listarTodos(),
+      repositorios.clientes.listarTodasLasNotas(),
     ])
-    return { clientes, ventas, presupuestos, config, zonas, movimientos }
+    return { clientes, ventas, presupuestos, config, zonas, movimientos, notas }
   }, [repositorios])
 
   return useMemo(

@@ -78,7 +78,28 @@ trasladan al lunes por la ley Emiliani.
 La ficha trae el histórico, la tendencia, las variaciones y tus notas. Escribe ahí lo que se habló:
 lo que no se escribe se olvida.
 
-### 6. Lleva el informe — *Reportes*
+### 6. Planea la semana — *Visitas*
+
+La aplicación te dice **a quién ver primero**, combinando tres cosas: lo que vale el cliente (su
+clase A, B o C), **cómo viene** (creciendo, estable o cayendo) y cuánto llevas sin verlo.
+
+Dos clientes de clase A no valen lo mismo si uno crece y el otro se está yendo. El que cae sube en la
+lista, porque recuperarlo vale más que acompañar al que ya va solo.
+
+La lista se corta por lo que alcanzas a hacer en una semana — ese número lo pones tú en
+*Configuración → Política de visitas*, junto con cada cuánto ver a cada clase. Si tus frecuencias
+piden más visitas de las que caben, la aplicación te lo dice con las dos cifras y la resta, en vez de
+dejarte creer que cumples un plan imposible.
+
+**Marca «Visitado hoy»** cuando vuelvas. Eso es lo que hace que el plan siga siendo de fiar: sin
+registrar visitas, todos aparecen como pendientes para siempre.
+
+**Imprime la hoja de ruta** antes de salir. Va agrupada **por municipio**, no por prioridad — en la
+calle el orden lo manda la carretera — y cada cliente lleva una línea en blanco para escribir.
+
+---
+
+### 7. Lleva el informe — *Reportes*
 
 Cuatro documentos, todos con **Imprimir o guardar en PDF**:
 

@@ -22,7 +22,14 @@ import {
 /** Ventas de un cliente indexadas por periodo. */
 type VentasPorPeriodo = Map<Periodo, Pesos>
 
-function agruparPorCliente(ventas: readonly VentaMensual[]): Map<Id, VentasPorPeriodo> {
+/**
+ * Indexa las ventas por cliente y periodo.
+ *
+ * Se exporta porque el plan de visitas necesita la misma serie para calcular
+ * tendencia y proyeccion: recorrer las ventas dos veces con criterios que
+ * pudieran divergir es como se acaba con dos cifras distintas para lo mismo.
+ */
+export function agruparPorCliente(ventas: readonly VentaMensual[]): Map<Id, VentasPorPeriodo> {
   const porCliente = new Map<Id, VentasPorPeriodo>()
   for (const venta of ventas) {
     if (venta.valor === 0) continue

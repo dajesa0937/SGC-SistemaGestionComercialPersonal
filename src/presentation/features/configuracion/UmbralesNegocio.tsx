@@ -15,7 +15,7 @@ interface Definicion {
   clave: Clave
   etiqueta: string
   ayuda: string
-  unidad: 'meses' | 'porcentaje' | 'dias'
+  unidad: 'meses' | 'porcentaje' | 'dias' | 'visitas'
   minimo: number
   maximo: number
 }
@@ -68,6 +68,56 @@ const CAMPOS: readonly Definicion[] = [
     unidad: 'porcentaje',
     minimo: 10,
     maximo: 120,
+  },
+]
+
+/**
+ * Politica de visitas.
+ *
+ * Va en su propia tarjeta y no mezclada con los umbrales porque responde a otra
+ * pregunta: los umbrales dicen como leer los datos, esto dice como trabajar la
+ * calle.
+ */
+const CAMPOS_VISITAS: readonly Definicion[] = [
+  {
+    clave: 'diasVisitaA',
+    etiqueta: 'Visitar a un cliente A cada',
+    ayuda: 'Los que concentran la mayor parte de tu facturación.',
+    unidad: 'dias',
+    minimo: 1,
+    maximo: 365,
+  },
+  {
+    clave: 'diasVisitaB',
+    etiqueta: 'Visitar a un cliente B cada',
+    ayuda: 'El grupo intermedio.',
+    unidad: 'dias',
+    minimo: 1,
+    maximo: 365,
+  },
+  {
+    clave: 'diasVisitaC',
+    etiqueta: 'Visitar a un cliente C cada',
+    ayuda: 'La cola larga de la cartera.',
+    unidad: 'dias',
+    minimo: 1,
+    maximo: 365,
+  },
+  {
+    clave: 'diasVisitaSinHistoria',
+    etiqueta: 'Visitar a un cliente sin compras cada',
+    ayuda: 'Todavía no ha comprado, así que no tiene clase: hay que ir a abrirlo.',
+    unidad: 'dias',
+    minimo: 1,
+    maximo: 365,
+  },
+  {
+    clave: 'visitasPorSemana',
+    etiqueta: 'Visitas que alcanzas a hacer por semana',
+    ayuda: 'Es el límite que convierte una lista de deseos en un plan que cabe.',
+    unidad: 'visitas',
+    minimo: 1,
+    maximo: 100,
   },
 ]
 
@@ -131,7 +181,13 @@ function Fila({
           className="cifra h-9 w-20 rounded-md border border-borde bg-superficie px-2.5 text-right text-sm text-texto"
         />
         <span className="w-14 text-xs text-tenue">
-          {campo.unidad === 'porcentaje' ? '%' : campo.unidad === 'meses' ? 'meses' : 'días'}
+          {campo.unidad === 'porcentaje'
+            ? '%'
+            : campo.unidad === 'meses'
+              ? 'meses'
+              : campo.unidad === 'visitas'
+                ? 'visitas'
+                : 'días'}
         </span>
       </div>
     </div>
@@ -192,6 +248,42 @@ export function UmbralesNegocio() {
           </p>
         </div>
       ) : null}
+    </Tarjeta>
+  )
+}
+
+export function PoliticaDeVisitas() {
+  const { config, guardar } = useConfiguracionNegocio()
+  const { mostrar } = useAvisos()
+
+  if (!config) return null
+
+  const aplicar = async (clave: Clave, valor: number) => {
+    try {
+      await guardar({ [clave]: valor })
+    } catch (error) {
+      mostrar(error instanceof Error ? error.message : 'No se pudo guardar', 'error')
+    }
+  }
+
+  return (
+    <Tarjeta>
+      <div className="border-b border-borde-suave px-5 py-3">
+        <h2 className="text-sm font-medium text-texto">Política de visitas</h2>
+        <p className="mt-0.5 text-xs text-suave">
+          Cada cuánto ver a cada clase y cuántas visitas caben en tu semana. El plan se recalcula al
+          instante.
+        </p>
+      </div>
+
+      {CAMPOS_VISITAS.map((campo) => (
+        <Fila
+          key={campo.clave}
+          campo={campo}
+          valor={config[campo.clave]}
+          onGuardar={(valor) => void aplicar(campo.clave, valor)}
+        />
+      ))}
     </Tarjeta>
   )
 }

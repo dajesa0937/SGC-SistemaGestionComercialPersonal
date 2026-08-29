@@ -22,6 +22,8 @@ export interface ClienteRepository {
   crearAlias(clienteId: Id, textoNormalizado: string): Promise<AliasCliente>
 
   listarNotas(clienteId: Id): Promise<NotaCliente[]>
+  /** Todas las notas. El plan de visitas necesita la ultima de cada cliente. */
+  listarTodasLasNotas(): Promise<NotaCliente[]>
   crearNota(nota: Omit<NotaCliente, 'id' | 'creadoEn'>): Promise<NotaCliente>
   eliminarNota(id: Id): Promise<void>
 }

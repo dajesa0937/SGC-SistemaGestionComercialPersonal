@@ -1,12 +1,14 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
-type Tono = 'neutro' | 'acento' | 'alerta'
+type Tono = 'neutro' | 'acento' | 'alerta' | 'exito' | 'peligro'
 
 const TONOS: Record<Tono, string> = {
   neutro: 'bg-superficie-alt text-suave',
   acento: 'bg-acento-suave text-acento-fuerte',
   alerta: 'bg-alerta-suave text-alerta',
+  exito: 'bg-exito-suave text-exito',
+  peligro: 'bg-peligro-suave text-peligro',
 }
 
 export function Badge({

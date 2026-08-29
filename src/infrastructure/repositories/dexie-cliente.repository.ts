@@ -94,6 +94,10 @@ export class DexieClienteRepository implements ClienteRepository {
     return notas.sort((a, b) => b.fecha.localeCompare(a.fecha))
   }
 
+  async listarTodasLasNotas(): Promise<NotaCliente[]> {
+    return this.db.notas.toArray()
+  }
+
   async crearNota(nota: Omit<NotaCliente, 'id' | 'creadoEn'>): Promise<NotaCliente> {
     const completa: NotaCliente = { ...nota, id: nuevoId(), creadoEn: ahoraISO() }
     await this.db.notas.add(completa)

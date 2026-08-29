@@ -3,7 +3,7 @@ import { Check, X } from 'lucide-react'
 import { EncabezadoPagina } from '@/presentation/components/shared/EncabezadoPagina'
 import { Tarjeta } from '@/presentation/components/shared/Tarjeta'
 import { ConmutadorTema } from '@/presentation/components/shared/ConmutadorTema'
-import { UmbralesNegocio } from './UmbralesNegocio'
+import { PoliticaDeVisitas, UmbralesNegocio } from './UmbralesNegocio'
 import { Respaldo } from './Respaldo'
 import { Zonas } from './Zonas'
 import { useResumenBase } from '@/presentation/hooks/data/useResumenBase'
@@ -47,7 +47,7 @@ export default function PaginaConfiguracion() {
     <>
       <EncabezadoPagina
         titulo="Configuración"
-        descripcion="Zonas, apariencia, estado del almacenamiento y respaldo."
+        descripcion="Zonas, política de visitas, apariencia, almacenamiento y respaldo."
       />
 
       <div className="flex flex-col gap-5">
@@ -92,6 +92,8 @@ export default function PaginaConfiguracion() {
         <Zonas />
 
         <UmbralesNegocio />
+
+        <PoliticaDeVisitas />
 
         <Respaldo />
       </div>

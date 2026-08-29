@@ -1,6 +1,12 @@
 import type { Cliente, ClienteEnriquecido } from '@/domain/cliente/cliente.entity'
 import type { ConfiguracionNegocio } from '@/domain/config/configuracion.entity'
 import type { Zona } from '@/domain/geografia/zona.entity'
+import type { NotaCliente } from '@/domain/cliente/cliente.entity'
+import type { Crecimiento, Proyeccion } from '@/application/visitas/crecimiento'
+import { calcularCrecimiento, proyectarClienteAlCierre } from '@/application/visitas/crecimiento'
+import type { PlanDeVisitas } from '@/application/visitas/planDeVisitas'
+import { construirPlanDeVisitas } from '@/application/visitas/planDeVisitas'
+import { agruparPorCliente } from './analizarCartera'
 import type { MovimientoVenta, ParticipacionMezcla } from '@/domain/venta/movimiento.entity'
 import { calcularMezcla } from '@/domain/venta/movimiento.entity'
 import type { Presupuesto } from '@/domain/presupuesto/presupuesto.entity'
@@ -36,6 +42,8 @@ export interface EntradaResumen {
   readonly zonas?: readonly Zona[]
   /** Lineas de factura, si el archivo importado las traia. */
   readonly movimientos?: readonly MovimientoVenta[]
+  /** Notas de todos los clientes. De aqui sale la ultima visita. */
+  readonly notas?: readonly NotaCliente[]
   /** Se inyecta para que el resumen sea determinista y comprobable. */
   readonly hoy: Date
 }
@@ -62,6 +70,9 @@ export interface ResumenDelPeriodo {
   readonly mezclaPeriodo: readonly ParticipacionMezcla[]
   readonly mezclaAnio: readonly ParticipacionMezcla[]
   readonly hayDetalleProducto: boolean
+  /** Tendencia y proyeccion de cada cliente, por su identificador. */
+  readonly analisisPorCliente: ReadonlyMap<string, { crecimiento: Crecimiento; proyeccion: Proyeccion }>
+  readonly plan: PlanDeVisitas
   /** No hay ninguna venta registrada en toda la base. */
   readonly sinDatos: boolean
 }
@@ -74,11 +85,35 @@ export interface ResumenDelPeriodo {
  * navegador y validar que coinciden con el archivo de origen.
  */
 export function resumenDelPeriodo(entrada: EntradaResumen): ResumenDelPeriodo {
-  const { periodo, clientes, ventas, presupuestos, config, zonas, movimientos = [], hoy } = entrada
+  const {
+    periodo,
+    clientes,
+    ventas,
+    presupuestos,
+    config,
+    zonas,
+    movimientos = [],
+    notas = [],
+    hoy,
+  } = entrada
 
   const mes = calcularCumplimiento(ventas, presupuestos, periodo)
   const anio = calcularAcumuladoAnual(ventas, presupuestos, periodo)
   const enriquecidos = enriquecerClientes(clientes, ventas, periodo, config, zonas)
+
+  const series = agruparPorCliente(ventas)
+  const analisisPorCliente = new Map(
+    enriquecidos.map((cliente) => {
+      const serie = series.get(cliente.id) ?? new Map()
+      return [
+        cliente.id,
+        {
+          crecimiento: calcularCrecimiento(serie, periodo),
+          proyeccion: proyectarClienteAlCierre(serie, periodo),
+        },
+      ]
+    }),
+  )
 
   return {
     periodo,
@@ -96,6 +131,8 @@ export function resumenDelPeriodo(entrada: EntradaResumen): ResumenDelPeriodo {
     mezclaPeriodo: calcularMezcla(movimientos.filter((m) => m.periodo === periodo)),
     mezclaAnio: calcularMezcla(movimientos.filter((m) => anioDe(m.periodo) === anioDe(periodo))),
     hayDetalleProducto: movimientos.length > 0,
+    analisisPorCliente,
+    plan: construirPlanDeVisitas(enriquecidos, notas, config, analisisPorCliente, hoy),
     sinDatos: ventas.length === 0,
   }
 }

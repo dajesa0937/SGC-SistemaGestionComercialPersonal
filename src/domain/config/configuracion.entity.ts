@@ -20,6 +20,26 @@ export interface ConfiguracionNegocio {
   umbralAmbar: number
   /** Dias sin respaldar tras los cuales se muestra el aviso. */
   diasAvisoRespaldo: number
+
+  /**
+   * Cada cuantos dias deberia visitarse un cliente de cada clase.
+   *
+   * Es politica comercial del usuario, no una constante del sistema: depende
+   * del ciclo de compra y de lo disperso que sea el territorio.
+   */
+  diasVisitaA: number
+  diasVisitaB: number
+  diasVisitaC: number
+  /** Un cliente sin historia de compra tambien hay que ir a verlo. */
+  diasVisitaSinHistoria: number
+  /**
+   * Visitas que el usuario alcanza a hacer en una semana.
+   *
+   * Es el limite que convierte una lista de deseos en un plan. Sin el, la
+   * aplicacion propondria mas visitas de las que caben en el mes y el plan
+   * seria papel mojado.
+   */
+  visitasPorSemana: number
 }
 
 export const CONFIGURACION_POR_DEFECTO: ConfiguracionNegocio = {
@@ -30,6 +50,11 @@ export const CONFIGURACION_POR_DEFECTO: ConfiguracionNegocio = {
   umbralVerde: 1,
   umbralAmbar: 0.85,
   diasAvisoRespaldo: 15,
+  diasVisitaA: 15,
+  diasVisitaB: 30,
+  diasVisitaC: 60,
+  diasVisitaSinHistoria: 45,
+  visitasPorSemana: 15,
 }
 
 export type Tema = 'claro' | 'oscuro' | 'sistema'
