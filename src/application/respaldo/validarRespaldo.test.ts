@@ -201,3 +201,45 @@ describe('respaldos de versiones anteriores', () => {
     expect(r.respaldo.datos.ventas).toEqual(CONTENIDO.ventas)
   })
 })
+
+describe('los tres orígenes de venta se restauran', () => {
+  it('una venta derivada de movimientos NO invalida el respaldo', () => {
+    // Regresión del defecto que dejó irrestaurables los respaldos hechos
+    // después de importar un archivo de ventas detallado: el esquema aceptaba
+    // solo «importacion» y «manual», y el importador escribe «movimientos».
+    const conMovimientos = {
+      ...CONTENIDO,
+      ventas: [
+        ...CONTENIDO.ventas,
+        {
+          id: 'v3',
+          clienteId: 'c1',
+          periodo: '2026-08',
+          valor: 4_500_000,
+          origen: 'movimientos' as const,
+          actualizadoEn: '2026-08-10T00:00:00.000Z',
+        },
+      ],
+      movimientos: [
+        {
+          id: 'm1',
+          clienteId: 'c1',
+          fecha: '2026-08-10',
+          periodo: '2026-08',
+          categoria: 'Motosierras',
+          producto: 'Motosierra 18 pulgadas',
+          cantidad: 3,
+          valorUnitario: 1_500_000,
+          valor: 4_500_000,
+          actualizadoEn: '2026-08-10T00:00:00.000Z',
+        },
+      ],
+    }
+
+    const r = validarRespaldo(serializarRespaldo(construirRespaldo(conMovimientos)))
+    expect(r.valido).toBe(true)
+    if (!r.valido) return
+    expect(r.respaldo.datos.ventas).toHaveLength(3)
+    expect(r.respaldo.datos.movimientos).toHaveLength(1)
+  })
+})

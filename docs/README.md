@@ -61,6 +61,7 @@ Las decisiones que se tomen durante el desarrollo se documentan en `docs/adr/`.
 | 9 · Plan de visitas | **Terminado** (29-ago-2026) | A quién ver esta semana, por lo que vale y por cómo viene |
 | 10 · Informe de gerencia | **Terminado** (29-ago-2026) | Una hoja que explica de dónde viene la diferencia, no solo cuál es |
 | 11 · Cartera por cobrar | **Terminado** (29-ago-2026) | Cuánto te deben, desde cuándo, quién, y qué se movió entre cortes |
+| 12 · Base de demostración | **Terminado** (29-ago-2026) | Ver la aplicación llena sin tocar los datos reales, y volver atrás exacto |
 
 **MVP terminado el 28 de agosto de 2026**, con los datos reales dentro y cada cifra contrastada
 contra su archivo de origen.

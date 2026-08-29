@@ -37,7 +37,12 @@ const venta = z.object({
   periodo,
   valor: z.number().finite(),
   unidades: z.number().optional(),
-  origen: z.enum(['importacion', 'manual']),
+  // Los tres valores de `OrigenVenta`. `movimientos` llego en el Sprint 2, con
+  // el archivo de ventas detallado, y NO se anadio aqui: durante nueve sprints
+  // cualquier respaldo hecho despues de importar un archivo linea a linea se
+  // rechazaba entero al restaurarlo. La prueba de respaldo no lo vio porque
+  // solo usaba ventas `manual`.
+  origen: z.enum(['importacion', 'manual', 'movimientos']),
   importacionId: z.string().optional(),
   actualizadoEn: z.string(),
 })

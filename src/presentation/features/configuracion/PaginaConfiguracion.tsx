@@ -6,6 +6,7 @@ import { ConmutadorTema } from '@/presentation/components/shared/ConmutadorTema'
 import { PoliticaDeVisitas, UmbralesNegocio } from './UmbralesNegocio'
 import { Respaldo } from './Respaldo'
 import { Zonas } from './Zonas'
+import { DatosDeDemostracion } from './DatosDeDemostracion'
 import { useResumenBase } from '@/presentation/hooks/data/useResumenBase'
 import { formatearNumero } from '@/lib/formato'
 import { solicitarAlmacenamientoPersistente } from '@/lib/almacenamiento'
@@ -47,7 +48,7 @@ export default function PaginaConfiguracion() {
     <>
       <EncabezadoPagina
         titulo="Configuración"
-        descripcion="Zonas, política de visitas, apariencia, almacenamiento y respaldo."
+        descripcion="Zonas, política de visitas, apariencia, almacenamiento, respaldo y demostración."
       />
 
       <div className="flex flex-col gap-5">
@@ -96,6 +97,8 @@ export default function PaginaConfiguracion() {
         <PoliticaDeVisitas />
 
         <Respaldo />
+
+        <DatosDeDemostracion />
       </div>
     </>
   )

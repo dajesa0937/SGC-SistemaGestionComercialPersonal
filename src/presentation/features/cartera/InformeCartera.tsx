@@ -66,9 +66,10 @@ export function InformeCartera({
   etiquetaGrupo,
   comparacion,
 }: Props) {
-  // Doce filas es lo que cabe en una pagina junto con el resto. Si se alarga,
-  // la hoja pasa a dos paginas y deja de ser la hoja de una pagina que es.
-  const conVencido = porCliente.filter((cliente) => cliente.vencido > 0).slice(0, 12)
+  // Diez filas es lo que cabe en una pagina junto con todo lo demas, contando
+  // el caso mas alto: dos cortes (el bloque de comparacion crece) y el sello de
+  // demostracion. Si se alarga, la hoja deja de ser de una pagina.
+  const conVencido = porCliente.filter((cliente) => cliente.vencido > 0).slice(0, 10)
   // Seis y seis: es lo que cabe en el hueco que deja la tabla de arriba sin
   // empujar el bloque entero a una segunda pagina.
   const movimientos = comparacion?.movimientos.slice(0, 6) ?? []

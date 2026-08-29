@@ -197,6 +197,31 @@ Abre en su propia ventana y funciona sin conexión.
 
 ---
 
+## Probar sin arriesgar: la base de demostración — *Configuración*
+
+Si quieres ver la aplicación llena —para aprenderla, o para mostrársela a alguien— hay una **base de
+demostración**: 42 clientes inventados en tus diez departamentos, 18 meses de ventas, presupuesto,
+visitas y dos cortes de cartera.
+
+**Cómo se usa, y cómo se vuelve atrás:**
+
+1. En *Configuración → Base de demostración*, pulsa **Cargar la demostración**.
+2. Si tienes datos, la aplicación **no te deja seguir sin respaldar**: te ofrece descargar tu
+   respaldo ahí mismo. Ese archivo es lo que te va a devolver a tus datos, así que guárdalo bien.
+3. Juega todo lo que quieras.
+4. Para volver, ve a *Restaurar* y carga tu respaldo. **Vuelve exacto**, sin rastro de la
+   demostración.
+
+> **No se puede confundir con lo tuyo.** Cada cliente inventado se llama `DEMO · algo`, la aplicación
+> muestra un aviso permanente en pantalla, y **todo lo que imprimas sale con una banda que dice
+> «DATOS DE DEMOSTRACIÓN · NINGUNA DE ESTAS CIFRAS ES REAL»**. Es a propósito: el riesgo de una demo
+> no es perder datos, es que unas cifras inventadas terminen en una reunión.
+>
+> Cargar la demostración **reemplaza** la base entera, no se mezcla con lo tuyo. Justo por eso se
+> puede deshacer.
+
+---
+
 ## Respaldo y restauración — *Configuración*
 
 - **Descargar respaldo** genera un archivo `.json` con absolutamente todo.

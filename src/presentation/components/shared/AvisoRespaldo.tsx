@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motivoAvisoRespaldo } from '@/application/respaldo/debeAvisarRespaldo'
 import { useConfiguracionNegocio } from '@/presentation/hooks/data/useConfiguracion'
 import { useEstadoRespaldo } from '@/presentation/hooks/data/useRespaldo'
+import { useDemo } from '@/presentation/hooks/data/useDemo'
 
 /**
  * Aviso de respaldo pendiente.
@@ -14,8 +15,13 @@ import { useEstadoRespaldo } from '@/presentation/hooks/data/useRespaldo'
 export function AvisoRespaldo() {
   const estado = useEstadoRespaldo()
   const { config } = useConfiguracionNegocio()
+  const marca = useDemo()
 
   if (!estado || !config) return null
+  // Con la demostracion cargada no hay nada que respaldar, y el aviso empujaria
+  // a descargar un archivo lleno de datos inventados que despues se confundiria
+  // con el respaldo de verdad.
+  if (marca?.esDemo) return null
 
   const motivo = motivoAvisoRespaldo(estado, config.diasAvisoRespaldo)
   if (motivo === null) return null

@@ -55,7 +55,7 @@ export function Respaldo() {
     if (!validacion?.valido) return
     setOcupado(true)
     try {
-      await restaurar(validacion.respaldo.datos)
+      await restaurar(validacion.respaldo.datos, validacion.respaldo.generadoEn)
       mostrar('Respaldo restaurado. Todos los datos anteriores fueron reemplazados.', 'exito')
       setValidacion(null)
     } catch (error) {
