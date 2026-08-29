@@ -36,3 +36,16 @@ así se lee su encabezado».
 Esto obliga a que el asistente del Sprint 2 detecte la forma del archivo y ofrezca dos modos de
 mapeo. No es un detalle menor: es la diferencia entre un importador que sirve y uno que solo sirve
 para la mitad de los archivos posibles.
+
+## Plantillas SGC Personal.xlsx
+
+Plantilla de importación lista para usar. Cuatro hojas:
+
+- **Instrucciones** — qué es obligatorio y qué no.
+- **Clientes** — los títulos que la aplicación reconoce, con dos filas de ejemplo.
+- **Ventas** — lo mismo para el archivo del mes.
+- **Municipios DANE** — los 1.122 municipios del país con su código, para copiar y pegar.
+
+**El orden de las columnas no importa**: el importador lee los títulos, nunca la posición. Está
+verificado importando un archivo con las columnas desordenadas y con nombres alternativos
+(«CEDULA», «RAZON SOCIAL», «CELULAR», «ENCARGADO»): las reconoció todas sin intervención.

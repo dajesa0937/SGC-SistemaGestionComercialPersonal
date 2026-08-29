@@ -44,6 +44,32 @@ a los meses siguientes. Se guarda al salir de la casilla o al pulsar Enter.
 
 ### 2. Ten tu cartera cargada — *Clientes*
 
+> **¿Cómo debe venir el Excel?** El orden de las columnas **no importa**. La aplicación lee los
+> títulos de la primera fila, nunca la posición, y tampoco le afectan las mayúsculas ni las tildes.
+> En `docs/ejemplos/Plantillas SGC Personal.xlsx` tienes la plantilla lista, con las instrucciones y
+> los 1.122 municipios con su código DANE.
+>
+> Reconoce solo estos títulos, y sus variantes habituales:
+>
+> | Campo | Títulos que entiende |
+> |---|---|
+> | Identificación | Identificación · NIT · Documento · Cédula · CC · RUT |
+> | Nombre | Nombre · Razón social · Cliente |
+> | Nombre comercial | Nombre comercial · Comercial · Establecimiento |
+> | Municipio | Ciudad · Municipio · Población · Código DANE |
+> | Dirección | Dirección · Dir |
+> | Teléfono | Teléfono · Celular · Móvil · Tel |
+> | Correo | Correo · Email · Mail |
+> | Contacto | Contacto · Responsable · Encargado |
+> | Código | Código · Cod · ID |
+>
+> Obligatorio: el **nombre**, y la **identificación o el código**. Todo lo demás es opcional. Si un
+> título no lo reconoce, en el paso 2 del asistente lo asignas tú a mano.
+>
+> En la columna de municipio vale el código (`68001`) o el nombre (`Bucaramanga`). Un nombre que
+> existe en varios departamentos —«San Pablo»— no se puede resolver solo: ahí hace falta el código.
+
+
 Puedes crear los clientes uno a uno o importar el maestro completo con **Importar**. El asistente te
 muestra qué va a pasar antes de tocar nada, y los nombres que no reconozca te los pregunta.
 
