@@ -8,6 +8,7 @@ import { DexieImportacionRepository } from './dexie-importacion.repository'
 import { DexieConfiguracionRepository } from './dexie-configuracion.repository'
 import { DexieRespaldoRepository } from './dexie-respaldo.repository'
 import { DexieZonaRepository } from './dexie-zona.repository'
+import { DexieCobranzaRepository } from './dexie-cobranza.repository'
 
 /** Construye la implementacion de los repositorios respaldada por IndexedDB. */
 export function crearRepositoriosDexie(): Repositorios {
@@ -19,6 +20,7 @@ export function crearRepositoriosDexie(): Repositorios {
     presupuestos: new DexiePresupuestoRepository(db),
     importaciones: new DexieImportacionRepository(db),
     zonas: new DexieZonaRepository(db),
+    cobranza: new DexieCobranzaRepository(db),
     configuracion: new DexieConfiguracionRepository(db),
     respaldo: new DexieRespaldoRepository(db),
   }

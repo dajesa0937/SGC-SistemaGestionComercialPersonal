@@ -14,6 +14,7 @@ const PaginaImportacion = lazy(
 )
 const PaginaReportes = lazy(() => import('@/presentation/features/reportes/PaginaReportes'))
 const PaginaVisitas = lazy(() => import('@/presentation/features/visitas/PaginaVisitas'))
+const PaginaCartera = lazy(() => import('@/presentation/features/cartera/PaginaCartera'))
 const PaginaConfiguracion = lazy(
   () => import('@/presentation/features/configuracion/PaginaConfiguracion'),
 )
@@ -64,6 +65,14 @@ export function Rutas() {
           element={
             <Ruta>
               <PaginaImportacion />
+            </Ruta>
+          }
+        />
+        <Route
+          path="cartera"
+          element={
+            <Ruta>
+              <PaginaCartera />
             </Ruta>
           }
         />

@@ -8,6 +8,7 @@ import type { VentaMensual } from '@/domain/venta/venta.entity'
 import type { MovimientoVenta } from '@/domain/venta/movimiento.entity'
 import type { Presupuesto } from '@/domain/presupuesto/presupuesto.entity'
 import type { Importacion } from '@/domain/importacion/importacion.entity'
+import type { CorteCartera, DocumentoCartera } from '@/domain/cobranza/cobranza.entity'
 
 /** Fila de la tabla clave-valor de configuracion. */
 export interface FilaConfiguracion {
@@ -24,6 +25,8 @@ export type BaseSGC = Dexie & {
   presupuestos: EntityTable<Presupuesto, 'id'>
   importaciones: EntityTable<Importacion, 'id'>
   zonas: EntityTable<Zona, 'id'>
+  cortes: EntityTable<CorteCartera, 'id'>
+  documentosCartera: EntityTable<DocumentoCartera, 'id'>
   configuracion: EntityTable<FilaConfiguracion, 'clave'>
 }
 
@@ -109,5 +112,15 @@ export function aplicarEsquema(db: Dexie): void {
   // No hay migracion de datos: la tabla nace vacia y se llena al importar.
   db.version(3).stores({
     movimientos: 'id, clienteId, periodo, fecha, categoria, producto, [clienteId+periodo]',
+  })
+
+  // Cartera por cobrar. Un corte es la foto de una fecha, con sus documentos;
+  // la tabla nace vacia y se llena al importar, asi que no hay que migrar nada.
+  //
+  // `fecha` va indexada porque es la llave real del corte: reimportar el
+  // reporte de una fecha tiene que encontrar el anterior y reemplazarlo.
+  db.version(4).stores({
+    cortes: 'id, fecha',
+    documentosCartera: 'id, corteId, clienteId, identificacion, fechaVencimiento',
   })
 }

@@ -147,6 +147,36 @@ Cinco documentos, todos con **Imprimir o guardar en PDF**:
 
 ---
 
+### 8. Controla lo que te deben — *Cartera*
+
+Importa el reporte **«Cuentas por cobrar detallada por documento»** que te manda la empresa, tal
+como llega: la aplicación reconoce sola el encabezado de la fila 7, el bloque de título con celdas
+combinadas y la fecha de proceso del final. Cada importación guarda un **corte con su fecha**, así
+que a partir del segundo la pantalla te dice qué subió y qué bajó, cliente por cliente.
+
+Arriba, las cuatro cifras: cartera total, vencido y su porcentaje, **mora promedio ponderada por
+saldo** (no por documento: un peso viejo pesa más que una factura pequeña) y concentración de los
+cinco mayores saldos. Debajo, el reparto por edad, la tabla cliente por cliente con su mora, y a la
+derecha el saldo agrupado por zona, departamento o municipio.
+
+**Imprime la cartera** para llevarla: cabe en una página.
+
+> **Los tramos se calculan, no se copian.** La edad de cada saldo sale de su fecha de vencimiento
+> contra la fecha del corte. Las seis columnas de edades del archivo se usan para **comprobar** la
+> lectura: si alguna fila no cuadra, la aplicación te lo dice y la importa igual. Cero descuadres
+> significa que leyó bien.
+>
+> **Un saldo que baja no es un pago.** Entre un corte y otro también se factura, así que la
+> aplicación habla de saldos que *suben*, *bajan* o quedan *saldados*, nunca de pagos. Para saber lo
+> recaudado haría falta el reporte de pagos, que este archivo no trae.
+>
+> **Clientes sin municipio.** El reporte trae clientes que no están en tu maestro. Al importar
+> puedes crearlos con una casilla, pero nacen sin municipio: hasta que se lo pongas en su ficha, ese
+> saldo no entra en el mapa, ni en las zonas, ni en el plan de visitas. La pantalla te avisa con la
+> cifra exacta que está sin ubicar.
+
+---
+
 ## Cosas que conviene saber
 
 **Los filtros viven en la dirección web.** Puedes guardar como marcador una vista filtrada, y el

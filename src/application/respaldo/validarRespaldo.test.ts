@@ -51,6 +51,8 @@ const CONTENIDO = {
   movimientos: [],
   importaciones: [],
   zonas: [],
+  cortes: [],
+  documentosCartera: [],
   configuracion: [{ clave: 'negocio', valor: { mesesParaInactivo: 3 } }],
 }
 
@@ -174,5 +176,28 @@ describe('tolerancia razonable', () => {
       actualizadoEn: '2026-01-01T00:00:00.000Z',
     }
     expect(validarRespaldo(JSON.stringify(minimo)).valido).toBe(true)
+  })
+})
+
+describe('respaldos de versiones anteriores', () => {
+  it('un respaldo v3, anterior al módulo de cartera, se restaura sin cartera', () => {
+    // Se construye quitando los dos campos nuevos, que es exactamente como sale
+    // un archivo guardado antes del Sprint 11.
+    const crudo = JSON.parse(ARCHIVO) as {
+      version: number
+      datos: Record<string, unknown>
+    }
+    crudo.version = 3
+    delete crudo.datos['cortes']
+    delete crudo.datos['documentosCartera']
+
+    const r = validarRespaldo(JSON.stringify(crudo))
+    expect(r.valido).toBe(true)
+    if (!r.valido) return
+    expect(r.respaldo.datos.cortes).toEqual([])
+    expect(r.respaldo.datos.documentosCartera).toEqual([])
+    // Y no pierde nada de lo que sí traía.
+    expect(r.respaldo.datos.clientes).toEqual(CONTENIDO.clientes)
+    expect(r.respaldo.datos.ventas).toEqual(CONTENIDO.ventas)
   })
 })

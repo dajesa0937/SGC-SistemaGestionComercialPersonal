@@ -1,4 +1,6 @@
 import type { Pesos } from '@/domain/shared/types'
+import type { Centavos } from '@/domain/shared/dinero'
+import { aPesos } from '@/domain/shared/dinero'
 
 const MONEDA = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -31,6 +33,22 @@ export function formatearPesosCorto(valor: Pesos): string {
 function redondear(valor: number): string {
   const decimales = valor >= 100 ? 0 : 1
   return valor.toFixed(decimales).replace('.', ',').replace(/,0$/, '')
+}
+
+/**
+ * Centavos a pesos, sin decimales.
+ *
+ * La cartera se guarda en centavos para que las comprobaciones del importador
+ * cuadren al centimo, pero en pantalla los centavos son ruido: el usuario cobra
+ * y negocia en pesos. Se convierte aqui, en el ultimo momento.
+ */
+export function formatearCentavos(valor: Centavos): string {
+  return formatearPesos(Math.round(aPesos(valor)))
+}
+
+/** Centavos abreviados: `22058112116` -> `$ 220,6 M`. */
+export function formatearCentavosCorto(valor: Centavos): string {
+  return formatearPesosCorto(aPesos(valor))
 }
 
 /** `0.784` -> `78,4 %`. */

@@ -81,6 +81,15 @@
     padding: 4pt 6pt;
   }
 
+  /* Tablas apretadas para las hojas que tienen que caber en una pagina.
+     El relleno general de 4pt/6pt es comodo de leer pero cuesta unos 4pt por
+     fila, y en una hoja de treinta filas eso es la diferencia entre una pagina
+     y dos. */
+  .tabla-compacta th,
+  .tabla-compacta td {
+    padding: 2pt 4pt;
+  }
+
   /* Las URL no aportan nada en papel. */
   a[href]::after {
     content: none !important;

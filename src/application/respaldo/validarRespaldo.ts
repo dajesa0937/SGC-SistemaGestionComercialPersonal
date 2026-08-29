@@ -95,6 +95,39 @@ const importacion = z.object({
   estado: z.enum(['aplicada', 'revertida']),
 })
 
+/**
+ * Corte de cartera y sus documentos.
+ *
+ * `.default([])` en las dos: un respaldo generado antes de que existiera el
+ * modulo de cartera es valido y se restaura sin cartera, que es exactamente lo
+ * que tenia. Rechazarlo convertiria el cambio de modelo en la perdida de las
+ * copias ya guardadas.
+ */
+const corteCartera = z.object({
+  id: z.string().min(1),
+  fecha: z.string(),
+  procesadoEn: z.string().optional(),
+  empresa: z.string().optional(),
+  nit: z.string().optional(),
+  archivo: z.string(),
+  importadoEn: z.string(),
+  total: z.number().finite(),
+  documentos: z.number().int().nonnegative(),
+})
+
+const documentoCartera = z.object({
+  id: z.string().min(1),
+  corteId: z.string().min(1),
+  identificacion: z.string(),
+  nombre: z.string(),
+  documento: z.string(),
+  fechaVencimiento: z.string(),
+  valor: z.number().finite(),
+  clienteId: z.string().optional(),
+  contacto: z.string().optional(),
+  telefono: z.string().optional(),
+})
+
 const esquemaRespaldo = z.object({
   aplicacion: z.literal('sgc-personal'),
   version: z.number().int().positive(),
@@ -135,6 +168,8 @@ const esquemaRespaldo = z.object({
         }),
       )
       .default([]),
+    cortes: z.array(corteCartera).default([]),
+    documentosCartera: z.array(documentoCartera).default([]),
     configuracion: z.array(z.object({ clave: z.string(), valor: z.unknown() })).default([]),
   }),
 })

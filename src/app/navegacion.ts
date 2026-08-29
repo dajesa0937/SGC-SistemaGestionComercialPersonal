@@ -6,6 +6,7 @@ import {
   Settings,
   Target,
   Users,
+  Wallet,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -41,6 +42,12 @@ export const SECCIONES: readonly Seccion[] = [
     etiqueta: 'Ventas',
     descripcion: 'Registrar o importar las ventas del mes',
     icono: FileUp,
+  },
+  {
+    ruta: '/cartera',
+    etiqueta: 'Cartera',
+    descripcion: 'Cuánto te deben y desde cuándo',
+    icono: Wallet,
   },
   {
     ruta: '/visitas',
